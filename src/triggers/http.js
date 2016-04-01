@@ -1,5 +1,8 @@
 import express from 'express';
 import util from 'util';
+import { taskPool } from '../queue';
+import { createTask } from '../task';
+import bodyParser from 'body-parser';
 
 import Trigger from '../trigger';
 
@@ -23,12 +26,19 @@ class HttpTrigger extends Trigger {
   }
 
   init () {
+    this.use(bodyParser.urlencoded({
+      extended: true
+    }));    
+    this.use(bodyParser.json());
     // post trigger 
-    this.post('trigger', (req, res) => {
+    this.post('/trigger', (req, res) => {
+      console.log(req.body);
+      createTask(req.body);
+
       res.json({
         state: 'success'
       });
-    });
+    })
   }
 
   start() {
@@ -40,10 +50,11 @@ class HttpTrigger extends Trigger {
       var meth = methods[i];
 
       this[meth] = (...args) => {
-        var handle = args.pop();
+        // var handle = args.pop();
         var method = instance[meth]
 
-        return method.call(instance, ...args, handle.bind(this));
+        return method.call(instance, ...args);
+        // return method.call(instance, ...args, handle.bind(this));
       }
     }
   }

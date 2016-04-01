@@ -5,10 +5,11 @@ import fs from 'fs';
 import mkdirp from 'mkdirp';
 import Promise from 'bluebird';
 
-import Queue from './queue';
+import { taskPool } from './queue';
 import { toCamelCase } from './misc';
 import { triggerManager } from './triggerManager';
 
+console.log(taskPool);
 var agentInstance;
 
 function processRunning(pid) {
@@ -39,7 +40,6 @@ function checkTaskState(task) {
 }
 
 class Agent {
-  tasks = new Queue();
   manager = triggerManager()
 
   static run() {
@@ -90,7 +90,7 @@ class Agent {
 
   _main() {
     try {
-      var task = this.tasks.next();
+      var task = taskPool.next();
 
       if (task) {
         switch (checkTaskState(task)) {

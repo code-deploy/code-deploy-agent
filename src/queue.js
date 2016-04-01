@@ -1,11 +1,11 @@
 import Task from './task';
 
-class Queue {
+export class Queue {
   tasks = [];
 
   next() {
     var task = this.tasks[0];
-    
+
     if (task) {
       if (task.isRunning()) {
         return task;
@@ -33,4 +33,7 @@ class Queue {
   }
 }
 
-export default Queue;
+export var taskPool = new Queue;
+
+// if (!taskPooler) { taskPooler = new Queue; }
+
