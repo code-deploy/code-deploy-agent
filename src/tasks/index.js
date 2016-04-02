@@ -1,5 +1,5 @@
-import { parseTask } from './parseTask';
+import { createTask } from './task';
 
 export default {
-  parseTask
+  createTask
 }

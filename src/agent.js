@@ -2,7 +2,8 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
-import Promise from 'bluebird';
+import util from 'util';
+// import Promise from 'bluebird';
 
 import { taskPool } from './queue';
 import { toCamelCase } from './misc';
@@ -110,6 +111,8 @@ class Agent {
             console.log('timeout');
             break;
           default: 
+
+            console.log(task.getMeta('createdAt'));
             console.log('unknown');
         }
       } else {

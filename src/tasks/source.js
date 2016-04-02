@@ -1,5 +1,6 @@
 import sources from '../sources';
 import assert from 'assert';
+import { Task } from '../task';
 
 const SourceTypes = Object.keys(sources);
 
@@ -25,4 +26,26 @@ export function createSource(type, sourceUrl, opts) {
 
   var source = sources[type];
   return source.create(sourceUrl, opts)
+}
+
+
+export function featureSource(Composed) {
+  return class extends Composed {
+    constructor(opts) {
+      super(opts);
+
+      // Composed.prototype.constructor.call(this, opts);
+
+      this.sourceUrl = opts.source;
+      this.source = sourceType(opts);
+    }
+  }
+}
+
+function sourceType (opts) {
+  if (opts.sourceType) {
+    return createSource(opts.source, opts.sourceType, opts);
+  } else {
+    return parseSource(opts.source);
+  }
 }

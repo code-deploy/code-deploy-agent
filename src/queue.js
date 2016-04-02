@@ -7,22 +7,23 @@ export class Queue {
     var task = this.tasks[0];
 
     if (task) {
-      if (task.isRunning()) {
-        return task;
-      } else if (task.isReady()) {
-        return task;
-      } else if (task.isDone()) {
-        this.tasks.shift();
-        return task;
-      } else if (task.isTimeout()) {
-        this.tasks.shift();
-        return task;
-      } else if (task.isFailed()) {
-        this.tasks.shift();
-        return task;
-      } else {
-        return null;
-      }
+      return task;
+      // if (task.isRunning()) {
+      //   return task;
+      // } else if (task.isReady()) {
+      //   return task;
+      // } else if (task.isDone()) {
+      //   this.tasks.shift();
+      //   return task;
+      // } else if (task.isTimeout()) {
+      //   this.tasks.shift();
+      //   return task;
+      // } else if (task.isFailed()) {
+      //   this.tasks.shift();
+      //   return task;
+      // } else {
+      //   return null;
+      // }
     } else {
       return null;
     }
@@ -36,7 +37,8 @@ export class Queue {
 export var taskPool = new Queue;
 
 export function createTask(options) {
-  var task = tasks.parseTask(options);
+  var task = tasks.createTask(options);
+
   taskPool.push( task );
   return task;
 }
