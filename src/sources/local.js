@@ -3,7 +3,7 @@ import path from 'path';
 import uuid from 'node-uuid';
 import mkdirp from 'mkdirp';
 
-import fileType from './fileType';
+import * as fileType from './fileType';
 import Source from './source';
 
 import config from '../config';
@@ -13,7 +13,7 @@ const incomingDir = path.join(config.workDir, 'incoming/local')
 
 class LocalSource extends Source {
 
-  constructor(source, targetDir) {
+  constructor(source) {
     super()
 
     this.id = uuid.v1();
@@ -47,7 +47,7 @@ class LocalSource extends Source {
 export const type = 'local';
 
 export function create(source, opts) {
-  return new LocalSource(source, targetPath)
+  return new LocalSource(source)
 }
 
 export function validFormat (file) {

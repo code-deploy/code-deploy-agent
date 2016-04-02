@@ -1,9 +1,9 @@
 import {Trigger} from '../trigger';
 
-class HttpTrigger extends Trigger {
+class SqsTrigger extends Trigger {
 
   constructor (httpOptions = {}) {
-
+    super(null);
   }
 
 }
