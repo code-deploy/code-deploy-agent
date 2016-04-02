@@ -1,4 +1,3 @@
-import Config from './config';
 import os from 'os';
 import path from 'path';
 import fs from 'fs';
@@ -8,11 +7,12 @@ import Promise from 'bluebird';
 import { taskPool } from './queue';
 import { toCamelCase } from './misc';
 import { triggerManager } from './triggerManager';
+import config from './config';
 
 console.log(taskPool);
 var agentInstance;
 
-function processRunning(pid) {
+function isProcessRunning(pid) {
   try {
     process.kill(pid + 0, 0);
     return true;
@@ -48,7 +48,7 @@ class Agent {
   }
 
   checkLoaded() {
-    const pidfile = path.join('/tmp/deploy-agent/', 'deploy-agent.pid');
+    const pidfile = path.join(config.workDir, config.pidfile);
 
     try{
       fs.accessSync(path.dirname(pidfile), fs.F_OK);
@@ -65,7 +65,7 @@ class Agent {
 
     var pid = parseInt(fs.readFileSync(pidfile));
 
-    if (processRunning(pid)) {
+    if (isProcessRunning(pid)) {
       console.error('Always running the deploy-agent instance. checking ', pidfile);
       process.exit(-1);
     } else {

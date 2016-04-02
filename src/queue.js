@@ -1,4 +1,4 @@
-import Task from './task';
+import tasks from './tasks'
 
 export class Queue {
   tasks = [];
@@ -34,6 +34,12 @@ export class Queue {
 }
 
 export var taskPool = new Queue;
+
+export function createTask(options) {
+  var task = tasks.parseTask(options);
+  taskPool.push( task );
+  return task;
+}
 
 // if (!taskPooler) { taskPooler = new Queue; }
 

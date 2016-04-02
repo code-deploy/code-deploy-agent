@@ -1,10 +1,10 @@
 import express from 'express';
 import util from 'util';
-import { taskPool } from '../queue';
-import { createTask } from '../task';
 import bodyParser from 'body-parser';
 
+import config from '../config';
 import Trigger from '../trigger';
+import * as queue from '../queue';
 
 const app = express();
 
@@ -16,7 +16,7 @@ class HttpTrigger extends Trigger {
     if (typeof httpOptions === 'undefined') { httpOptions = {}; }
 
     this.options = util._extend(httpOptions, {
-      port: 8040
+      port: config.trigger.http.port
     });
 
     this.server = express();
@@ -32,12 +32,17 @@ class HttpTrigger extends Trigger {
     this.use(bodyParser.json());
     // post trigger 
     this.post('/trigger', (req, res) => {
-      console.log(req.body);
-      createTask(req.body);
+      // try {
+        console.log(typeof req.body, req.body, Object.keys(req.body));
+        var task = queue.createTask(req.body);
 
-      res.json({
-        state: 'success'
-      });
+        res.json({
+          state: 'success'
+        });
+
+      // } catch (err) {
+      //   res.er        
+      // }
     })
   }
 

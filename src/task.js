@@ -1,4 +1,5 @@
 import uuid from 'node-uuid';
+import childProcess from 'child_process';
 
 /**
  * Task 任务基础元数据 
@@ -17,6 +18,7 @@ import uuid from 'node-uuid';
  * 3. action: 动作类型，告诉 Agent 对于下载的资源进行什么样的操作，通常是 Uncompress, 
  *       Nothing, Parse (默认动作)
  *    a. deployFile: 动作文件指定，默认是(资源根目录下面的 deploy.yml)
+ *    b. inline: 内置脚本执行不需要 deployFile 的存在
  *
  * 4. 执行期的参数
  *   createAt:　任务生成的时间，通常是收到任务触发信号的时间
@@ -37,6 +39,7 @@ export class Task {
 
     this.id = options.id;
     this.name = options.name;
+    // this.process = 
   }
 
 	isRunning() {
@@ -59,9 +62,17 @@ export class Task {
 
 	}
 
-	run () {
+	start () {
 
 	}
+
+  stop () {
+
+  }
+
+  kill () {
+
+  }
 }
 
 export function createTask(options)  {
