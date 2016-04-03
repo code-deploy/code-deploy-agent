@@ -6,10 +6,10 @@ import util from 'util';
 // import Promise from 'bluebird';
 
 import log from './logger';
-import { taskPool } from './queue';
-import { toCamelCase } from './misc';
-import { triggerManager } from './triggerManager';
+import * as taskManager from './taskManager';
 import config from './config';
+
+import { toCamelCase } from './misc';
 
 var agentInstance;
 
@@ -24,7 +24,6 @@ function isProcessRunning(pid) {
 
 
 class Agent {
-  manager = triggerManager()
 
   static run() {
     agentInstance = new Agent;
@@ -68,46 +67,9 @@ class Agent {
     this.checkLoaded();
     this.trap('SIGINT', () => process.exit());
 
-    var timer = setInterval(() => this._main(), 100);
-    timer.ref();
-  }
-
-  _main() {
-    try {
-      var task = taskPool.next();
-
-      if (task) {
-        switch (task.getState()) {
-          case 'ready':
-            console.log('ready');
-            task.start();
-            break;
-          case 'running':
-            console.log('running');
-            break;
-          case 'done':
-            console.log('done');
-            break;
-          case 'failed':
-            console.log('failed');
-            break;
-          case 'timeout':
-            console.log('timeout');
-            break;
-          default:
-            console.log(task.getMeta('createdAt'));
-            console.log('unknown');
-        }
-      } else {
-        process.stdout.write('.');
-      }
-    } catch (err) {
-      log.error(err.message);
-      return;
-    }
+    taskManager.run();
   }
 }
-
 
 Agent.run();
 

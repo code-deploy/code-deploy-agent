@@ -6,3 +6,4 @@ trigger:
     port: 8040
 stepTimeout: 20
 logLevel: WARN # TRACE, DEBUG, WARN, ERROR 
+taskInterval: 100
