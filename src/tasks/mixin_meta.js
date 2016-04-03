@@ -9,7 +9,7 @@ const MetaInfo = [
   "endAt"
 ];
 
-export function featureMeta(Composed) {
+export function mixMeta(Composed) {
 
   return class extends Composed {
 

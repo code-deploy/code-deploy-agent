@@ -5,12 +5,12 @@ import mkdirp from 'mkdirp';
 import util from 'util';
 // import Promise from 'bluebird';
 
+import log from './logger';
 import { taskPool } from './queue';
 import { toCamelCase } from './misc';
 import { triggerManager } from './triggerManager';
 import config from './config';
 
-console.log(taskPool);
 var agentInstance;
 
 function isProcessRunning(pid) {
@@ -18,27 +18,10 @@ function isProcessRunning(pid) {
     process.kill(pid + 0, 0);
     return true;
   } catch (err) {
-      return false;
+    return false;
   }
 }
 
-var TaskStatus = ['running', 'done', 'ready', 'failed', 'timeout'];
-
-function checkTaskState(task) {
-  for (var i = 0; i < TaskStatus.length; i++) {
-    var state = TaskStatus[i];
-    var methodName = 'is' + state.toCamelCase();
-    var stateMethod = task[methodName];
-
-    if (util.isFunction(stateMethod)) {
-      if (stateMethod.call(task)) {
-        return methodName;
-      }
-    }
-  }
-
-  return 'unknown';
-}
 
 class Agent {
   manager = triggerManager()
@@ -59,15 +42,15 @@ class Agent {
         mkdirp.sync(path.dirname(pidfile))
         fs.writeFileSync(pidfile, process.pid.toString());
       } else {
-        console.error(err);
+        log.error(err.message);
         process.exit(-1);
       }
-    }    
+    }
 
     var pid = parseInt(fs.readFileSync(pidfile));
 
     if (isProcessRunning(pid)) {
-      console.error('Always running the deploy-agent instance. checking ', pidfile);
+      log.error('Always running the deploy-agent instance. checking ', pidfile);
       process.exit(-1);
     } else {
       fs.writeFileSync(pidfile, process.pid.toString());
@@ -78,7 +61,7 @@ class Agent {
     process.on(signal, function() {
       console.log("Caught interrupt signal");
       cb();
-    });    
+    });
   }
 
   mainLoop () {
@@ -94,9 +77,10 @@ class Agent {
       var task = taskPool.next();
 
       if (task) {
-        switch (checkTaskState(task)) {
+        switch (task.getState()) {
           case 'ready':
             console.log('ready');
+            task.start();
             break;
           case 'running':
             console.log('running');
@@ -110,8 +94,7 @@ class Agent {
           case 'timeout':
             console.log('timeout');
             break;
-          default: 
-
+          default:
             console.log(task.getMeta('createdAt'));
             console.log('unknown');
         }
@@ -119,7 +102,7 @@ class Agent {
         process.stdout.write('.');
       }
     } catch (err) {
-      console.error(err.stack);
+      log.error(err.message);
       return;
     }
   }

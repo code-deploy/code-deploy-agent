@@ -8,9 +8,12 @@ class TriggerManager extends EventEmitter {
 
   constructor () {
     super()
-    
+
     this.bindAllEvents({
       command: function(command) {
+
+      },
+      kill: function(id) {
 
       }
     })
@@ -28,7 +31,7 @@ class TriggerManager extends EventEmitter {
 }
 
 function triggerManager() {
-  return new TriggerManager();  
+  return new TriggerManager();
 }
 
 export {

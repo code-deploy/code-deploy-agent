@@ -4,6 +4,14 @@ import { Task } from '../task';
 
 const SourceTypes = Object.keys(sources);
 
+function sourceType (opts) {
+  if (opts.sourceType) {
+    return createSource(opts.source, opts.sourceType, opts);
+  } else {
+    return parseSource(opts.source);
+  }
+}
+
 export function parseSource(sourceUrl) {
   var source;
   for (var type in sources) {
@@ -29,7 +37,7 @@ export function createSource(type, sourceUrl, opts) {
 }
 
 
-export function featureSource(Composed) {
+export function mixSource(Composed) {
   return class extends Composed {
     constructor(opts) {
       super(opts);
@@ -39,13 +47,5 @@ export function featureSource(Composed) {
       this.sourceUrl = opts.source;
       this.source = sourceType(opts);
     }
-  }
-}
-
-function sourceType (opts) {
-  if (opts.sourceType) {
-    return createSource(opts.source, opts.sourceType, opts);
-  } else {
-    return parseSource(opts.source);
   }
 }
