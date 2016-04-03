@@ -30,6 +30,7 @@ class Agent {
     agentInstance.mainLoop();
   }
 
+  // check /tmp/deploy-agent.pid
   checkLoaded() {
     const pidfile = path.join(config.workDir, config.pidfile);
 
@@ -56,6 +57,7 @@ class Agent {
     }
   }
 
+  // Ctrl + c break;
   trap(signal, cb) {
     process.on(signal, function() {
       console.log("Caught interrupt signal");

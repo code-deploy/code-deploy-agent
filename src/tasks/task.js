@@ -41,7 +41,6 @@ export class Task extends TaskBase {
    * Agent 也不再监控它的状态，即彻底的死亡
    */
   kill () {
-    log.warn(util.format("killing Task :%s", this.id));
   }
 
   /** enterRunning 进入运行状态的事件*/

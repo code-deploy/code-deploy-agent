@@ -2,31 +2,15 @@ import tasks from './tasks'
 
 export class Queue {
   tasks = [];
-
-  next() {
-    var task = this.tasks[0];
-
-    if (task) {
-      return task;
-      // if (task.isRunning()) {
-      //   return task;
-      // } else if (task.isReady()) {
-      //   return task;
-      // } else if (task.isDone()) {
-      //   this.tasks.shift();
-      //   return task;
-      // } else if (task.isTimeout()) {
-      //   this.tasks.shift();
-      //   return task;
-      // } else if (task.isFailed()) {
-      //   this.tasks.shift();
-      //   return task;
-      // } else {
-      //   return null;
-      // }
-    } else {
-      return null;
-    }
+  
+  find(taskId) {
+    for (var i = 0; i < this.tasks.length; i++) {
+      var task = this.tasks[i];
+      if (task && (task.id === taskId || task === taskId)) {
+        return task;
+      }
+    }  
+    return null;
   }
 
   push(task) {
