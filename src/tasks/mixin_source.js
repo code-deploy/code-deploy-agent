@@ -1,6 +1,5 @@
 import sources from '../sources';
 import assert from 'assert';
-import { Task } from '../task';
 
 const SourceTypes = Object.keys(sources);
 

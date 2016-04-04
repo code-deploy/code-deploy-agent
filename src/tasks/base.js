@@ -1,7 +1,6 @@
 import uuid from 'node-uuid';
 import childProcess from 'child_process';
 
-
 /**
  * Task 任务基础元数据 
  * 1. name: 任务名称, 做为独立的任务划分区分，通常会导致同类的任务堆叠且顺序的执行。

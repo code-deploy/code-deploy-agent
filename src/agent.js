@@ -15,8 +15,7 @@ var agentInstance;
 
 function isProcessRunning(pid) {
   try {
-    process.kill(pid + 0, 0);
-    return true;
+    return process.kill(pid + 0, 0) !== 0;
   } catch (err) {
     return false;
   }

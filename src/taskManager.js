@@ -45,13 +45,13 @@ export function run() {
 
 function _main() {
 
-  safe(() => concurrency((task) => {
+  safe(() => each((task) => {
     switch (task.getState()) {
       case 'ready':
         startTask(task)
         break;
       case 'running':
-        console.log('running count', runningTasks().length);
+        console.log('running count', runningTasks().length, 'pending count', taskPool.tasks.length);
         break;
       case 'done':
         console.log('done');
@@ -95,16 +95,18 @@ function each(cb) {
 
     if (task) {
       var state = task.getState();
+
       if (state === 'running') {
-        if (runnings < config.tasks.concurrency) {
-          runnings++;
-          cb(task);
-        } else {
-          return;
-        }
-      } else {
-        cb(task);
+        runnings++;
       }
+
+      if (state === 'ready' && runnings >= config.tasks.concurrency) {
+        continue;
+      } else {
+        runnings++;
+      }
+
+      cb(task);
     } else {
       process.stdout.write('.');
     }
