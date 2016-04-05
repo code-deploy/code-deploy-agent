@@ -2,16 +2,14 @@ import util from 'util';
 import assert from 'assert';
 import log  from '../logger';
 import { TaskBase } from './base';
-import { mixMeta } from './mixin_meta';
-import { mixSource } from './mixin_source';
-import { mixStatus } from './mixin_status';
-import { mixTimeout } from './mixin_timeout';
-import { s } from '../misc';
 
-@mixMeta
-@mixSource
-@mixStatus
-@mixTimeout
+import { s } from '../misc';
+import { mixin } from '../mixins';
+
+@mixin('meta')
+@mixin('source')
+@mixin('status')
+@mixin('timeout')
 export class Task extends TaskBase {
 
   status = {

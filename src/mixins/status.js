@@ -3,7 +3,7 @@ import util, { isFunction } from 'util';
 import config from '../config';
 import misc from '../misc';
 
-export function mixStatus(Composed) {
+export default function mixind(Composed) {
 
   return class extends Composed {
     /**

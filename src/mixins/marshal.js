@@ -1,6 +1,6 @@
 import assert from 'assert';
 
-export function mixTask(Composed) {
+export default function mixind(Composed) {
   return class extends Composed {
     constructor(source, opts) {
       super(source, opts);

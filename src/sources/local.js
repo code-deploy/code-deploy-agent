@@ -12,13 +12,14 @@ import Source from './source';
 import * as preprocesses from '../preprocesses';
 import log from '../logger';
 import config from '../config';
-import { mixTask } from './mixin_task';
 import { runnify } from '../runner';
+import { mixin } from '../mixins';
 
 var mkdirp = Promise.promisify(_mkdirp);
 
-@mixTask
-class LocalSource extends Source {
+@mixin('marshal')
+@mixin('task')
+export class LocalSource extends Source {
 
   @runnify('../runner/source.js')
   read () {

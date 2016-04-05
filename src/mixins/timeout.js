@@ -3,7 +3,7 @@ import assert from 'assert';
 import config from '../config';
 import log from '../logger'
 
-export function mixTimeout(Composed) {
+export default function mixind(Composed) {
 
   return class extends Composed {
 

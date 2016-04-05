@@ -3,13 +3,13 @@ import config from '../config';
 // import { Task } from '../task';
 
 const MetaInfo = [
-  "createdAt", 
+  "createdAt",
   "updatedAt",
   "startAt",
   "endAt"
 ];
 
-export function mixMeta(Composed) {
+export default function mixind(Composed) {
 
   return class extends Composed {
 
