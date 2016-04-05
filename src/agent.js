@@ -41,7 +41,7 @@ class Agent {
         mkdirp.sync(path.dirname(pidfile))
         fs.writeFileSync(pidfile, process.pid.toString());
       } else {
-        log.error(err.message);
+        log.error(err.stack);
         process.exit(-1);
       }
     }

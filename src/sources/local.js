@@ -1,53 +1,63 @@
 import fs from 'fs';
 import path from 'path';
 import uuid from 'node-uuid';
-import mkdirp from 'mkdirp';
+import _mkdirp from 'mkdirp';
+import Promise from 'bluebird';
+import assert from 'assert';
 
+import {s, minute } from '../misc';
 import * as fileType from './fileType';
 import Source from './source';
 
+import * as preprocesses from '../preprocesses';
+import log from '../logger';
 import config from '../config';
-import preprocesses from '../preprocesses';
+import { mixTask } from './mixin_task';
+import { runnify } from '../runner';
 
-const incomingDir = path.join(config.workDir, 'incoming/local')
+var mkdirp = Promise.promisify(_mkdirp);
 
+@mixTask
 class LocalSource extends Source {
 
-  constructor(source) {
-    super()
-
-    this.id = uuid.v1();
-    this.targetDir = path.join(incomingDir, this.id);
-    this.source = source;
-    this.fileType = fileType.check(source);
+  @runnify('../runner/source.js')
+  read () {
+    return Promise.all([
+      this.mkdirp().timeout(s(3)),
+      this.preprocessing().timeout(config.preprocesses.maxTime),
+    ]).then(() => {
+      // this.taskTransitionTo('done');
+    }).catch(Promise.TimeoutError, (err) => {
+      this.taskTransitionTo('timeout');
+    }).catch(err => {
+      this.taskClearTimeout();
+      this.taskTransitionTo('error', err);
+    });
   }
 
-  read () {
-    mkdirp.sync(this.targetDir);
-
-    this.preprocessing();
-
-    return this.targetDir;
+  mkdirp () {
+    return mkdirp(this.targetDir);
   }
 
   preprocessing () {
     var preprocess;
+
     if (this.fileType) {
       preprocess = preprocesses[this.fileType];
     } else {
       preprocess = preprocesses.try(this.source);
     }
 
-    assert(preprocess, 'Invalid preprocess type in this source ' +this.source);
+    assert(preprocess, 'Invalid preprocess type in this source ' + this.source);
 
-    preprocess.extract(this.source, this.targetDir);
+    return preprocess.extract(this.source, this.targetDir, {overwrite: true});
   }
 }
 
 export const type = 'local';
 
 export function create(source, opts) {
-  return new LocalSource(source)
+  return new LocalSource(source, opts)
 }
 
 export function validFormat (file) {
@@ -60,6 +70,6 @@ export function validFormat (file) {
       throw err
     }
   }
-  
+
   return true;
 }

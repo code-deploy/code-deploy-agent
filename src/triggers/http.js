@@ -28,22 +28,24 @@ class HttpTrigger extends Trigger {
   init () {
     this.use(bodyParser.urlencoded({
       extended: true
-    }));    
+    }));
     this.use(bodyParser.json());
-    // post trigger 
+    // post trigger
     this.post('/trigger', (req, res) => {
-      // try {
-        console.log(typeof req.body, req.body, Object.keys(req.body));
-        var task = queue.createTask(req.body);
+      var task = queue.createTask(req.body);
 
-        res.json({
-          state: 'success'
-        });
-
-      // } catch (err) {
-      //   res.er        
-      // }
-    })
+      res.json({
+        state: 'created',
+        task: {
+          id: task.id,
+          name: task.name,
+          sourceType: task.sourceType,
+          createdAt: task.meta.createdAt,
+          updatedAt: task.meta.updatedAt,
+          // event:
+        }
+      });
+    });
   }
 
   start() {
@@ -65,7 +67,7 @@ class HttpTrigger extends Trigger {
   }
 }
 
-var trigger; 
+var trigger;
 
 export default function createHttpTrigger(options) {
   trigger = new HttpTrigger(options);

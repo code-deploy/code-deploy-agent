@@ -3,38 +3,67 @@ import assert from 'assert';
 
 const SourceTypes = Object.keys(sources);
 
-function sourceType (opts) {
+function sourceType (task, opts) {
+  var source;
+
   if (opts.sourceType) {
-    return createSource(opts.source, opts.sourceType, opts);
+    source = pickSourceType(opts.sourceType);
   } else {
-    return parseSource(opts.source);
+    source = pickWithUrl(opts.source);
   }
+
+  opts.task = task;
+
+  return source.create(opts.source, opts);
 }
 
-export function parseSource(sourceUrl) {
+// export function parseSource(sourceUrl, opts) {
+//   var source;
+//   for (var type in sources) {
+//     var source = sources[type];
+
+//     if (source.validFormat(sourceUrl)) {
+//       break;
+//     }
+
+//     source = null;
+//   }
+
+//   assert(source, 'Invalid source url ' + sourceUrl);
+
+//   return source.create(sourceUrl, opts)
+// }
+
+// export function createSource(type, sourceUrl, opts) {
+//   assert(sources[type], 'Invalid source Type ' + sources[type]);
+
+//   var source = sources[type];
+//   return source.create(sourceUrl, opts)
+// }
+
+function pickSourceType(type, opts)  {
+  assert(sources[type], 'Invalid source Type ' + sources[type]);
+
+  return sources[type];
+}
+
+function pickWithUrl(url) {
   var source;
   for (var type in sources) {
     var source = sources[type];
 
-    if (source.validFormat(sourceUrl)) {
+    if (source.validFormat(url)) {
       break;
     }
 
     source = null;
   }
 
-  assert(source, 'Invalid source url ' + sourceUrl);
-
-  return source.create(source.type, sourceUrl)
+  assert(source, 'Invalid source url ' + url);
+  return source;
 }
 
-export function createSource(type, sourceUrl, opts) {
-  assert(sources[type], 'Invalid source Type ' + sources[type]);
-
-  var source = sources[type];
-  return source.create(sourceUrl, opts)
-}
-
+// var source = pickSourceType(opts)
 
 export function mixSource(Composed) {
   return class extends Composed {
@@ -44,7 +73,7 @@ export function mixSource(Composed) {
       // Composed.prototype.constructor.call(this, opts);
 
       this.sourceUrl = opts.source;
-      this.source = sourceType(opts);
+      this.source = sourceType(this, opts);
     }
   }
 }

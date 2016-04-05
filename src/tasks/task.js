@@ -1,4 +1,5 @@
 import util from 'util';
+import assert from 'assert';
 import log  from '../logger';
 import { TaskBase } from './base';
 import { mixMeta } from './mixin_meta';
@@ -16,8 +17,8 @@ export class Task extends TaskBase {
   status = {
     "ready": [ 'running', 'done' ],
     "stop": [ 'running', 'done' ],
-    "running": [ 'stop', 'done', 'failed', 'timeout' ],
-    "failed": [ 'running', 'done' ],
+    "running": [ 'stop', 'done', 'error', 'timeout' ],
+    "error": [ 'running', 'done', 'timeout' ],
     "timeout": [ 'running', 'done' ]
   };
 
@@ -26,6 +27,19 @@ export class Task extends TaskBase {
    * 器会监视任务的状态，是否有执行超时间等。
    */
   start () {
+    assert(this.source, 'Invalid source, this ' +  this.id + 'cant have source');
+
+    Promise.all([
+      this.source.read(),             // 下载源文件
+      this.execute()                  // 执行部署脚本
+    ]).then(result => {
+      this.transitionTo('done');
+    }).catch(Promise.TimeoutError, () => {
+      this.transitionTo('timeout');
+    }).catch(err => {
+      this.transitionTo('error', err);
+    });
+
     this.transitionTo('running');
   }
 
@@ -41,16 +55,25 @@ export class Task extends TaskBase {
    * Agent 也不再监控它的状态，即彻底的死亡
    */
   kill () {
+    this._clearTimeout();
+  }
+
+  execute () {
+    return Promise.resolve(() => true );
   }
 
   /** enterRunning 进入运行状态的事件*/
   enterRunning() {
-    this.delay(s(3), () => this.transitionTo('timeout'));
+    this.delay(s(20), () => this.transitionTo('timeout'));
   }
 
   /** enterTimeout 超时会自动杀死任务*/
   enterTimeout () {
     this.kill();
+  }
+
+  enterError(err) {
+    log.error(err.stack);
   }
 }
 

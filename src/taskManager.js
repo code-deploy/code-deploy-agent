@@ -17,6 +17,18 @@ export function killTask(taskId) {
   }
 }
 
+function done(taskId) {
+  for (var i = 0; i < taskPool.tasks.length; i++) {
+    var task = taskPool.tasks[i];
+    if (task && (task.id === taskId || task === taskId)) {
+      log.debug(util.format("Task :%s is done", task.id));
+      task.kill();
+      taskPool.tasks.splice(i,1);
+    }
+  }
+}
+
+
 export function listTask() {
   return taskPool.tasks;
 }
@@ -54,10 +66,10 @@ function _main() {
         console.log('running count', runningTasks().length, 'pending count', taskPool.tasks.length);
         break;
       case 'done':
-        console.log('done');
+        done(task);
         break;
-      case 'failed':
-        console.log('failed');
+      case 'error':
+        console.log('error');
         break;
       case 'timeout':
         console.log('timeout');
@@ -77,7 +89,7 @@ function safe(cb) {
 
     cb();
   } catch (err) {
-    log.error(err);
+    log.error(err.stack);
   }
 }
 

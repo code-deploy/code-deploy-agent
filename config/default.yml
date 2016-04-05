@@ -9,3 +9,5 @@ logLevel: WARN # TRACE, DEBUG, WARN, ERROR
 tasks:
   checkInterval: 300
   concurrency: 2
+preprocesses:
+  maxTime: 420000
