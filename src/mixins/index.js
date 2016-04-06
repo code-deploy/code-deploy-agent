@@ -1,5 +1,4 @@
 import assert from 'assert';
-import util from 'util';
 import task from './task';
 import marshal from './marshal'
 import meta from './meta';

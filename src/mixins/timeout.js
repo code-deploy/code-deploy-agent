@@ -1,4 +1,3 @@
-import util from 'util';
 import assert from 'assert';
 import config from '../config';
 import log from '../logger'

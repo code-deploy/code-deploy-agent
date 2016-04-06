@@ -1,4 +1,3 @@
-import util from 'util';
 import assert from 'assert';
 import log  from '../logger';
 import { TaskBase } from './base';

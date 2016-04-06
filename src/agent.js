@@ -2,8 +2,6 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
-import util from 'util';
-// import Promise from 'bluebird';
 
 import log from './logger';
 import * as taskManager from './taskManager';

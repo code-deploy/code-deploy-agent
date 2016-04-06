@@ -1,5 +1,4 @@
 import express from 'express';
-import util from 'util';
 import bodyParser from 'body-parser';
 
 import config from '../config';
@@ -15,9 +14,10 @@ class HttpTrigger extends Trigger {
 
     if (typeof httpOptions === 'undefined') { httpOptions = {}; }
 
-    this.options = util._extend(httpOptions, {
+    this.options = {
+      ...httpOptions,
       port: config.trigger.http.port
-    });
+    };
 
     this.server = express();
 

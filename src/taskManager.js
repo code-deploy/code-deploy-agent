@@ -1,4 +1,3 @@
-import util from 'util';
 import config from './config';
 import { taskPool } from './queue';
 import log from './logger';
