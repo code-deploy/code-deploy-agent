@@ -21,10 +21,9 @@ var mkdirp = Promise.promisify(_mkdirp);
 @mixin('marshal')
 export class LocalSource extends Source {
 
-  @runnify(__filename)
   read () {
     return Promise.all([
-      this.mkdirp().timeout(s(3)),
+      this.mkdirp(),
       this.preprocessing().timeout(config.preprocesses.maxTime),
     ]).then(() => {
       // this.taskTransitionTo('done');
@@ -37,6 +36,7 @@ export class LocalSource extends Source {
   }
 
   mkdirp () {
+    log.info(`Task ${this.id} Created path to ${this.targetDir}`);
     return mkdirp(this.targetDir);
   }
 
@@ -64,6 +64,10 @@ export class LocalSource extends Source {
       fileType,
       taskId: this.task.id,
     }
+  }
+
+  load(object) {
+
   }
 }
 

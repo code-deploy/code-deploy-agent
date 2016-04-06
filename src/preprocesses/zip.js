@@ -1,14 +1,18 @@
 import AdmZip from 'adm-zip';
 import Utils from 'adm-zip/util';
 import { promisify } from 'bluebird';
+import log from '../logger';
 
 var extract = promisify(function extractSync(from, to, opts = {overwrite: true}, cb) {
-  console.log(from);
+  log.info(`Zip starting extract all files to ${to}...`);
 
   var zip = new AdmZip(from);
   var { overwrite } = opts
 
-  zip.extractAllToAsync(to, overwrite, cb);
+  zip.extractAllToAsync(to, overwrite, (...args) => {
+    log.info(`Zip extract all files done`);
+    cb(...args);
+  });
 });
 
 export var extract = extract;

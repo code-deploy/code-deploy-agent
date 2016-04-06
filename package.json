@@ -23,6 +23,7 @@
     "bluebird": "^3.3.4",
     "eslint": "^2.5.3",
     "js-yaml": "^3.5.5",
+    "jshint": "^2.9.1",
     "mkdirp": "^0.5.1"
   },
   "dependencies": {

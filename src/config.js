@@ -16,7 +16,7 @@ const etcCofnig = readConfig(cfgFiles.etc, 'uti8');
 
 function readConfig(file) {
   try {
-    return yaml.safeLoad(fs.readFileSync(file, 'utf8'));  
+    return yaml.safeLoad(fs.readFileSync(file, 'utf8'));
   } catch (err) {
     return {};
   }

@@ -1,4 +1,3 @@
-// import sources from '../sources';
 import assert from 'assert';
 
 function getSourcesType(type) {

@@ -3,33 +3,6 @@ import path from 'path';
 import { fork } from 'child_process';
 import { decorate } from '../misc';
 
-// export function runnifyFile(file) {
-//   console.log(file);
-
-//   return function decorator(target, name, descriptor) {
-//     console.log(name, target, descriptor);
-//     return descriptor
-//   };
-// }
-
-
-// export function runnify(target, name) {
-//   var func = target[name];
-
-//   console.log(target, target[name]);
-//   target[name] = (...args) => {
-//     console.log(this);
-//     return func.call(this, ...args);
-//   }
-
-//   // descriptor.value = (...args) => {
-//   //   console.log(this);
-//   //   return func.call(this, ...args);
-//   // };
-
-//   return target;
-// };
-//
 const DEFAULT_MSG = 'This function running in child process...';
 
 function handleDescriptor(target, key, descriptor, [filename]) {
