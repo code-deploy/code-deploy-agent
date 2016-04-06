@@ -1,22 +1,23 @@
 import EventEmitter from 'events';
-import { createHttpTrigger } from './triggers';
+import { createHttpTrigger, createSQSTrigger } from './triggers';
 
 class TriggerManager extends EventEmitter {
   triggers = {
-    http: createHttpTrigger()
+    http: createHttpTrigger(),
+    sqs: createSQSTrigger(),
   };
 
   constructor () {
     super()
 
-    this.bindAllEvents({
-      command: function(command) {
+    // this.bindAllEvents({
+    //   command: function(command) {
 
-      },
-      kill: function(id) {
+    //   },
+    //   kill: function(id) {
 
-      }
-    })
+    //   }
+    // })
   }
 
   bindAllEvents (events) {

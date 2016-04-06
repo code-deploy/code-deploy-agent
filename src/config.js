@@ -12,7 +12,7 @@ const cfgFiles = {
 
 const defaultConfig = readConfig(cfgFiles.default, 'utf8');
 const homeConfig = readConfig(cfgFiles.home, 'uti8');
-const etcCofnig = readConfig(cfgFiles.etc, 'uti8');
+const etcConfig = readConfig(cfgFiles.etc, 'uti8');
 
 function readConfig(file) {
   try {
@@ -25,5 +25,5 @@ function readConfig(file) {
 export default {
   ...defaultConfig,
   ...homeConfig,
-  ...etcCofnig
+  ...etcConfig
 }

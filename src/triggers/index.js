@@ -1,7 +1,7 @@
 import createHttpTrigger from './http';
-// import SqsTrigger from './sqs';
+import createSQSTrigger from './sqs';
 
 export {
-  createHttpTrigger
-  // createSqsTrigger
+  createHttpTrigger,
+  createSQSTrigger
 }
