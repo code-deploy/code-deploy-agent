@@ -1,7 +1,12 @@
+import fs from 'fs';
 import AdmZip from 'adm-zip';
+import buckle from 'buckle';
+import unzip from 'unzip';
 import Utils from 'adm-zip/util';
 import { promisify } from 'bluebird';
 import log from '../logger';
+
+
 
 var extract = promisify(function extractSync(from, to, opts = {overwrite: true}, cb) {
   log.info(`Zip starting extract all files to ${to}...`);
@@ -15,7 +20,27 @@ var extract = promisify(function extractSync(from, to, opts = {overwrite: true},
   });
 });
 
-export var extract = extract;
+function extractZip(zip, to, opts = {}, cb ) {
+  fs.createReadStream(zip)
+    .pipe(unzip.Parse())
+    .on('entry', function (entry) {
+      var fileName = entry.path;
+      var type = entry.type; // 'Directory' or 'File'
+      var size = entry.size;
+      console.log(entry);
+      if (fileName === "this IS the file I'm looking for") {
+        entry.pipe(fs.createWriteStream(to));
+      } else {
+        entry.autodrain();
+      }
+    });
+}
+
+function buckleExtract(zip, to, opts = {}, cb) {
+  buckle.open(zip, to, cb)
+}
+
+export var extract = promisify(buckleExtract);
 
 export function extractStream(from , to) {
 

@@ -63,7 +63,13 @@ export default function mixind(Composed) {
 
     executeScript (file, cb) {
       log.info(`Execute Task  ${this.id} script ${file}`);
-      var script = cp.fork(path.resolve(__dirname, '../runner/runner.js'), [ '--task', this.id, '--file', file ] )
+      var args = [
+        '--task', this.id,
+        '--dir', this.source.targetDir,
+        '--file', file
+      ];
+
+      var script = cp.fork(path.resolve(__dirname, '../runner/runner.js'), args)
       script.on('exit', (code) => {
         log.info(`Task Script done`);
         cb(code);
