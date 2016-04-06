@@ -15,7 +15,7 @@ try {
   assert(deploy.target, 'Deploy file must have spectify target');
 
   fs.copySync(argv.dir, deploy.target)
-  if (deploy.script) { spawn(deploy.script, [], { cwd: argv.dir }) }
+  if (deploy.script) { spawn(deploy.script, [], { cwd: deploy.target }) }
 } catch (err) {
   log.error(err);
 }
