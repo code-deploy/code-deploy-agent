@@ -12,7 +12,7 @@ export default function mixind(Composed) {
       this._clearTimeout();
 
       this.expiredHandle = setTimeout(cb, time)
-      log.info(util.format('Task %s set timeout delay %d millseconds', this.id, time));
+      log.info(`Task ${this.id} set timeout delay ${time} millseconds`);
     }
 
     delayAt(time, cb) {

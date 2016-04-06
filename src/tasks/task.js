@@ -6,10 +6,10 @@ import { TaskBase } from './base';
 import { s } from '../misc';
 import { mixin } from '../mixins';
 
-@mixin('meta')
-@mixin('source')
-@mixin('status')
-@mixin('timeout')
+@mixin('meta')              // 原信息模块
+@mixin('source')            // 资源模块
+@mixin('status')            // 状态机模块
+@mixin('timeout')           // 延时模块
 export class Task extends TaskBase {
 
   status = {

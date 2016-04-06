@@ -11,7 +11,6 @@ function getSources() {
   return require('../sources').default;
 }
 
-
 function sourceType (task, opts) {
   var source;
 

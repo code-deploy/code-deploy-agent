@@ -17,11 +17,11 @@ import { mixin } from '../mixins';
 
 var mkdirp = Promise.promisify(_mkdirp);
 
-@mixin('marshal')
 @mixin('task')
+@mixin('marshal')
 export class LocalSource extends Source {
 
-  @runnify('../runner/source.js')
+  @runnify(__filename)
   read () {
     return Promise.all([
       this.mkdirp().timeout(s(3)),
@@ -52,6 +52,18 @@ export class LocalSource extends Source {
     assert(preprocess, 'Invalid preprocess type in this source ' + this.source);
 
     return preprocess.extract(this.source, this.targetDir, {overwrite: true});
+  }
+
+  dump() {
+    var { id, targetDir, source, fileType } = this;
+
+    return {
+      id,
+      targetDir,
+      source,
+      fileType,
+      taskId: this.task.id,
+    }
   }
 }
 

@@ -10,7 +10,7 @@ export function killTask(taskId) {
   for (var i = 0; i < taskPool.tasks.length; i++) {
     var task = taskPool.tasks[i];
     if (task && (task.id === taskId || task === taskId)) {
-      log.debug(util.format("Killing Task :%s", task.id));
+      log.debug(`Killing Task :${task.id}`);
       task.kill();
       taskPool.tasks.splice(i,1);
     }
@@ -21,7 +21,7 @@ function done(taskId) {
   for (var i = 0; i < taskPool.tasks.length; i++) {
     var task = taskPool.tasks[i];
     if (task && (task.id === taskId || task === taskId)) {
-      log.debug(util.format("Task :%s is done", task.id));
+      log.debug(`Task :${task.id} is done`);
       task.kill();
       taskPool.tasks.splice(i,1);
     }
@@ -35,13 +35,13 @@ export function listTask() {
 
 export function startTask(taskId) {
   var task = taskPool.find(taskId);
-  log.debug(util.format("Starting Task %s", task.id));
+  log.debug(`Starting Task ${task.id}`);
   task.start();
 }
 
 export function stopTask(taskId) {
   var task = taskPool.find(taskId);
-  log.debug(util.format("Stop Task %s", task.id));
+  log.debug(`Stop Task ${task.id}`);
   task.stop();
 }
 

@@ -40,7 +40,7 @@ export default function mixind(Composed) {
       var inState = !!~availableTargetStates.indexOf(state);
       var camel = (...args) => args.join(' ').toCamelCase();
 
-      assert(inState, util.format("Can't transition from %s to %s", this.state, state));
+      assert(inState, `Can't transition from ${this.state} to ${state}`);
 
       var enter = this[camel('enter', state)];
       var leave = this[camel('leave', this.state)];

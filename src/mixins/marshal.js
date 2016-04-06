@@ -2,30 +2,23 @@ import assert from 'assert';
 
 export default function mixind(Composed) {
   return class extends Composed {
-    constructor(source, opts) {
-      super(source, opts);
 
-      // Composed.prototype.constructor.call(this, opts);
-      assert(opts.task, 'Must pass task argument in opts');
-      this.task = opts.task;
+    dump() {
+      return JSON.stringify(this);
     }
 
-    taskTransitionTo (state, data) {
-      this.task.transitionTo(state, data);
+    load(hash) {
+      super.load(hash);
     }
 
-    taskTimeout(time) {
-      this.taskTimeoutWithFunc(time, () => {
-        this.taskTransitionTo('timeout');
-      });
+    static unmarshal(data) {
+      var obj = Object.create(this.prototype);
+      var hash = JSON.parse(marshal);
+      obj.load(hash);
     }
 
-    taskTimeoutWithFunc(time, cb) {
-      this.task.delay(time, cb);
-    }
-
-    taskClearTimeout() {
-      this.task._clearTimeout();
+    static marshal(obj) {
+      return obj.dump();
     }
   }
 }

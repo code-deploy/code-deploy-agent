@@ -18,7 +18,7 @@ export {
 }
 
 export function mixin(name) {
-  assert(exports[name], util.format('Cant found this module `%s\'', name));
+  assert(exports[name], `Cant found this module '${name}'`);
 
   var mixind = exports[name]; //.mixind;
 
