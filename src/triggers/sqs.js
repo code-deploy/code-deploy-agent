@@ -9,6 +9,12 @@ import argv from '../argv';
 import * as queue from '../queue';
 
 // import SQS from 'aws-sqs'
+/**
+ * SQS 工作方式 https://docs.aws.amazon.com/zh_cn/AWSSimpleQueueService/latest/SQSGettingStartedGuide/ReceiveMessage.html
+ *
+ * WaitTimeSeconds 为 0 的时候，是短轮询，你需要不断的查询列队，才能获取信息
+ * 我们现在采用的是长轮询，时间为 20 s, 每 20 s 要去 poll 一次。
+ */
 
 const {accessKeyId, secretAccessKey, region} = config.sqs;
 const apiVersion = '2012-11-05';
