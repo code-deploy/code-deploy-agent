@@ -31,6 +31,35 @@ SQS 消息列队，HTTP 触发等，在 消息列队中我们可以使用, 更�
 ## 部署 script deploy.yml
 部署脚步
 
+## 测试
+测试 code-deploy-agent 是不是正常工作
+### http 方式
+
+```bash
+curl -d '{"name":"test", "source": "examples/deploy.zip"}' -H "Content-Type: application/json" http://127.0.0.1:8040/trigger
+```
+
+### SQS 
+首先，启动 deploy-agent 服务器，启用 --verbose-sqs-url 参数，返回 SQS 地址信息。需要设置好 SQS 配置
+```
+npm run dev --verbose-sqs-url
+```
+ QueueUrl: 'https://sqs.cn-north-1.amazonaws.com.cn/560397965647/test-deploy-agent' }
+
+
+## 配置
+
+### SQS 配置
+在 home 目录下，设置 .deploy-agent 的内容为
+```yaml
+---
+sqs:
+  accessKeyId: [accessKeyId]
+  secretAccessKey: [secretAccessKey]
+  region: cn-north-1
+  endpoint: https://sqs.cn-north-1.amazonaws.com.cn/12341234asd/deploy
+```
+
 # RoadMap
 
 - [ ] Config

@@ -3,6 +3,7 @@ import AWS from 'aws-sdk';
 import config from '../config';
 import Trigger from '../trigger';
 import log from '../logger'
+import argv from '../argv';
 // import SQS from 'aws-sqs'
 
 const { accessKeyId, secretAccessKey, region, endpoint} = config.sqs;
@@ -60,7 +61,12 @@ class SqsTrigger extends Trigger {
         console.log(err, err.stack); // an error occurred
       } else {
         params['QueueUrl'] = data.QueueUrl;
-        console.log(params);
+
+        if (argv.verboseSqsUrl) {
+          console.log(data.QueueUrl);
+        }
+
+        log.info(`Create And Listen SQS Queue '${QueueName}' at ${data.QueueUrl}`);
         this.sqs.receiveMessage(params, (err, data) => {
           if (err) {
             console.log(err, err.stack);
