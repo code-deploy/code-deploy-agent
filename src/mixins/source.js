@@ -13,6 +13,7 @@ function getSources() {
 function sourceType (task, opts) {
   var source;
 
+  console.log(opts);
   if (opts.sourceType) {
     source = pickSourceType(opts.sourceType);
   } else {

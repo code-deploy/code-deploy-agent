@@ -60,6 +60,13 @@ sqs:
   endpoint: https://sqs.cn-north-1.amazonaws.com.cn/12341234asd/deploy
 ```
 
+启动 dev 
+拷贝 Queue Url
+
+```bash
+node_modules/.bin/babel-node [url] '{"name":"test", "source": "examples/deploy.zip"}'
+```
+
 # RoadMap
 
 - [ ] Config

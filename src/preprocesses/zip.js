@@ -1,4 +1,4 @@
-import AdmZip from 'admzip';
+import AdmZip from 'adm-zip';
 import buckle from 'buckle';
 import Utils from 'adm-zip/util';
 import {promisify} from 'bluebird';

@@ -65,15 +65,14 @@ function valueOfName(type, value) {
     return 'BinaryValue';
   }
 }
-console.log(sqs.sendMessage);
 
 sqs = Promise.promisifyAll(sqs);
 
 var params = {
-  MessageBody: 'trigger', /* required */
+  MessageBody: JSON.stringify({'trigger': body}), /* required */
   QueueUrl: QueueUrl, /* required */
-  DelaySeconds: 0,
-  MessageAttributes: hashToAttributes(body)
+  DelaySeconds: 0
+  // MessageAttributes: hashToAttributes(body)
 };
 
 sqs.sendMessageAsync(params)
