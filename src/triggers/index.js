@@ -4,4 +4,4 @@ import createSQSTrigger from './sqs';
 export {
   createHttpTrigger,
   createSQSTrigger
-}
+};

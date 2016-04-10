@@ -7,6 +7,6 @@ Logger.useDefaults({
     messages.unshift('[DeployAgent]');
     if (context.name) messages.unshift('[' + context.name + ']');
   }
-})
+});
 
-export default Logger
+export default Logger;

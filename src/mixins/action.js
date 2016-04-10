@@ -1,4 +1,3 @@
-import assert from 'assert';
 
 export default function mixind(Composed) {
   return class extends Composed {
@@ -30,5 +29,5 @@ export default function mixind(Composed) {
     taskClearTimeout() {
       this.task._clearTimeout();
     }
-  }
+  };
 }

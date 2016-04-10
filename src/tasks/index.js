@@ -1,5 +1,5 @@
-import { createTask } from './task';
+import {createTask} from './task';
 
 export default {
   createTask
-}
+};

@@ -1,11 +1,11 @@
 import assert from 'assert';
-import { isFunction } from 'util';
+import {isFunction} from 'util';
 import task from './task';
-import marshal from './marshal'
+import marshal from './marshal';
 import meta from './meta';
-import source from './source'
+import source from './source';
 import status from './status';
-import timeout from './timeout'
+import timeout from './timeout';
 
 
 
@@ -16,7 +16,7 @@ export {
   source,
   status,
   timeout
-}
+};
 
 export function mixin(name) {
   var mixind;
@@ -30,5 +30,5 @@ export function mixin(name) {
 
   return function(target) {
     return mixind(target);
-  }
+  };
 }

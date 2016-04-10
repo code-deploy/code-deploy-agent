@@ -1,9 +1,9 @@
 import assert from 'assert';
 import path from 'path';
-import { fork } from 'child_process';
-import { decorate } from '../misc';
+import {fork} from 'child_process';
+import {decorate} from '../misc';
 
-const DEFAULT_MSG = 'This function running in child process...';
+// const DEFAULT_MSG = 'This function running in child process...';
 
 function handleDescriptor(target, key, descriptor, [filename]) {
   if (typeof descriptor.value !== 'function') {
@@ -23,12 +23,16 @@ function handleDescriptor(target, key, descriptor, [filename]) {
       return new Promise((resolve, reject) => {
         var child = fork(path.join(__dirname, 'runner.js'), [filename, methodSignature], {timeout: 20});
 
-        child.on('exit', (code) => {
+        child.on('exit', code => {
           resolve(code);
         });
 
-        child.on('close', (code) => {
+        child.on('close', code => {
           resolve(code);
+        });
+
+        child.on('error', err => {
+          reject(err);
         });
       });
     }

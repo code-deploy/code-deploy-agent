@@ -4,7 +4,7 @@ import minimist from 'minimist';
 import path from 'path';
 import log from '../logger';
 import fs from 'fs-extra';
-import { spawn } from 'child_process';
+import {spawn} from 'child_process';
 
 const argv = minimist(process.argv.slice(2));
 const deployFile = path.join(argv.dir, argv.file);
@@ -14,8 +14,8 @@ try {
 
   assert(deploy.target, 'Deploy file must have spectify target');
 
-  fs.copySync(argv.dir, deploy.target)
-  if (deploy.script) { spawn(deploy.script, [], { cwd: deploy.target }) }
+  fs.copySync(argv.dir, deploy.target);
+  if (deploy.script) { spawn(deploy.script, [], {cwd: deploy.target}); }
 } catch (err) {
   log.error(err);
 }

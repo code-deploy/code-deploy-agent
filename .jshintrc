@@ -4,5 +4,6 @@
     	{ "start": "start-non-standard", "end": "end-non-standard" }
 	],
 	"undef": true,
-	"unused": true
+	"unused": true,
+	"predef": [ "process", "console", "__dirname", "__filename" ]
 }

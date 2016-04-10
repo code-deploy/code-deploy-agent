@@ -1,7 +1,5 @@
 import assert from 'assert';
-import { isFunction } from 'util';
-import config from '../config';
-import misc from '../misc';
+import {isFunction} from 'util';
 
 export default function mixind(Composed) {
 
@@ -27,14 +25,14 @@ export default function mixind(Composed) {
      *   }
      *
      */
-    state = "ready"
+    state = 'ready';
 
     constructor(opts) {
       super(opts);
     }
 
     transitionTo (state, data) {
-      var { status } = this;
+      var {status} = this;
       var availableTargetStates = status[this.state] ? status[this.state] : status['*'] || [];
 
       var inState = !!~availableTargetStates.indexOf(state);
@@ -58,5 +56,5 @@ export default function mixind(Composed) {
     getState () {
       return this.state;
     }
-  }
+  };
 }

@@ -27,5 +27,5 @@ export default function mixind(Composed) {
     taskClearTimeout() {
       this.task._clearTimeout();
     }
-  }
+  };
 }

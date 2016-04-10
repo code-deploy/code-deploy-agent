@@ -2,24 +2,19 @@ import AWS from 'aws-sdk';
 
 import config from '../config';
 import Trigger from '../trigger';
-import log from '../logger'
+import log from '../logger';
 import argv from '../argv';
 // import SQS from 'aws-sqs'
 
-const { accessKeyId, secretAccessKey, region, endpoint} = config.sqs;
+const {accessKeyId, secretAccessKey, region} = config.sqs;
 const apiVersion = '2012-11-05';
 
 const QueueName = 'test-deploy-agent';
 
-// AWS.config = new AWS.Config({
-//   accessKeyId,
-//   secretAccessKey,
-//   region
-// });
-
 class SqsTrigger extends Trigger {
 
-  constructor (options) {
+  /*eslint no-unused-vars: ["error", {"args": "none"}]*/
+  constructor (options = {}) {
     super(null);
 
     this.sqs = new AWS.SQS({
@@ -29,10 +24,6 @@ class SqsTrigger extends Trigger {
       region,
       apiVersion
     });
-    // this.sqs = new SQS(awsId, secret, {
-    //   region
-    // });
-    // console.log(this.sqs);
   }
 
   start () {
@@ -42,12 +33,12 @@ class SqsTrigger extends Trigger {
 
     var params = {
       AttributeNames: [
-        'Policy | VisibilityTimeout | MaximumMessageSize | MessageRetentionPeriod | ApproximateNumberOfMessages | ApproximateNumberOfMessagesNotVisible | CreatedTimestamp | LastModifiedTimestamp | QueueArn | ApproximateNumberOfMessagesDelayed | DelaySeconds | ReceiveMessageWaitTimeSeconds | RedrivePolicy',
+        'Policy | VisibilityTimeout | MaximumMessageSize | MessageRetentionPeriod | ApproximateNumberOfMessages | ApproximateNumberOfMessagesNotVisible | CreatedTimestamp | LastModifiedTimestamp | QueueArn | ApproximateNumberOfMessagesDelayed | DelaySeconds | ReceiveMessageWaitTimeSeconds | RedrivePolicy'
         /* more items */
       ],
       MaxNumberOfMessages: 10,
       MessageAttributeNames: [
-        'trigger',
+        'trigger'
         /* more items */
       ],
       VisibilityTimeout: 0,
@@ -89,4 +80,4 @@ export default function createSQSTrigger(options) {
 
   trigger.start();
   return trigger;
-};
+}

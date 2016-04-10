@@ -1,4 +1,3 @@
-import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
@@ -6,8 +5,6 @@ import mkdirp from 'mkdirp';
 import log from './logger';
 import * as taskManager from './taskManager';
 import config from './config';
-
-import { toCamelCase } from './misc';
 
 var agentInstance;
 
@@ -23,7 +20,7 @@ function isProcessRunning(pid) {
 class Agent {
 
   static run() {
-    agentInstance = new Agent;
+    agentInstance = new Agent();
     agentInstance.mainLoop();
   }
 
@@ -36,7 +33,7 @@ class Agent {
 
     } catch(err) {
       if (err.code === 'ENOENT') {
-        mkdirp.sync(path.dirname(pidfile))
+        mkdirp.sync(path.dirname(pidfile));
         fs.writeFileSync(pidfile, process.pid.toString());
       } else {
         log.error(err.stack);
@@ -57,7 +54,7 @@ class Agent {
   // Ctrl + c break;
   trap(signal, cb) {
     process.on(signal, function() {
-      console.log("Caught interrupt signal");
+      log.error('Caught interrupt signal');
       cb();
     });
   }

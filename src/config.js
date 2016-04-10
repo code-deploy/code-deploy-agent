@@ -3,7 +3,6 @@ import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 
-
 const cfgFiles = {
   default: path.resolve(__dirname, '../config/default.yml'),
   home: path.join(os.homedir(), '.deploy_agent'),
@@ -22,8 +21,10 @@ function readConfig(file) {
   }
 }
 
-export default {
-  ...defaultConfig,
-  ...homeConfig,
-  ...etcConfig
-}
+/*jshint ignore:start*/
+export default Object.assign(
+  defaultConfig,
+  homeConfig,
+  etcConfig
+);
+/*jshint ignore:end*/

@@ -11,19 +11,19 @@ import log from '../logger';
 const DEFAULT_SCRIPT = 'deploy.yml';
 
 function configAction(actionOpts) {
-  const { action } = actionOpts;
+  const {action} = actionOpts;
 
   switch(action) {
-    case 'inline':
-      return {
-        type: 'inline',
-        script: actionOpts.script
-      }
-    default:
-      return {
-        type: 'file',
-        filename: actionOpts.file || DEFAULT_SCRIPT
-      }
+  case 'inline':
+    return {
+      type: 'inline',
+      script: actionOpts.script
+    };
+  default:
+    return {
+      type: 'file',
+      filename: actionOpts.file || DEFAULT_SCRIPT
+    };
   }
 }
 
@@ -31,7 +31,7 @@ function defaultAction() {
   return {
     type: 'file',
     filename: DEFAULT_SCRIPT
-  }
+  };
 }
 
 export default function mixind(Composed) {
@@ -48,15 +48,17 @@ export default function mixind(Composed) {
     }
 
     execute () {
-      return new Promise((resolve, reject) => {
+
+      return new Promise((resolve) => {
         if (this.action.inline) {
-          this.executeInlineScript(this.action.script, resolve)
+          this.executeInlineScript(this.action.script, resolve);
         } else {
-          this.executeScript(this.action.filename, resolve)
+          this.executeScript(this.action.filename, resolve);
         }
       });
     }
 
+    /*eslint no-unused-vars: ["error", {"args": "none"}]*/
     excuteInlineScript (script, cb) {
 
     }
@@ -69,11 +71,11 @@ export default function mixind(Composed) {
         '--file', file
       ];
 
-      var script = cp.fork(path.resolve(__dirname, '../runner/runner.js'), args)
+      var script = cp.fork(path.resolve(__dirname, '../runner/runner.js'), args);
       script.on('exit', (code) => {
-        log.info(`Task Script done`);
+        log.info('Task Script done');
         cb(code);
       });
     }
-  }
+  };
 }

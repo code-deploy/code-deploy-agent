@@ -5,8 +5,6 @@ import config from '../config';
 import Trigger from '../trigger';
 import * as queue from '../queue';
 
-const app = express();
-
 class HttpTrigger extends Trigger {
 
   constructor (httpOptions) {
@@ -41,15 +39,14 @@ class HttpTrigger extends Trigger {
           name: task.name,
           sourceType: task.sourceType,
           createdAt: task.meta.createdAt,
-          updatedAt: task.meta.updatedAt,
-          // event:
+          updatedAt: task.meta.updatedAt
         }
       });
     });
   }
 
   start() {
-    this.server.listen(this.options.port)
+    this.server.listen(this.options.port);
   }
 
   _proxy (instance, ...methods) {
@@ -58,11 +55,11 @@ class HttpTrigger extends Trigger {
 
       this[meth] = (...args) => {
         // var handle = args.pop();
-        var method = instance[meth]
+        var method = instance[meth];
 
         return method.call(instance, ...args);
         // return method.call(instance, ...args, handle.bind(this));
-      }
+      };
     }
   }
 }
@@ -74,4 +71,4 @@ export default function createHttpTrigger(options) {
 
   trigger.start();
   return trigger;
-};
+}

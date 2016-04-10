@@ -24,7 +24,8 @@ function sourceType (task, opts) {
   return source.create(opts.source, opts);
 }
 
-function pickSourceType(type, opts)  {
+/*eslint no-unused-vars: ["error", {"args": "none"}]*/
+function pickSourceType(type, opts = {})  {
   var source = getSourcesType(type);
   assert(source, 'Invalid source Type ' + source);
 
@@ -34,7 +35,7 @@ function pickSourceType(type, opts)  {
 function pickWithUrl(url) {
   var source;
   for (var type in getSources()) {
-    var source = getSourcesType(type);
+    source = getSourcesType(type);
 
     if (source.validFormat(url)) {
       break;
@@ -47,17 +48,13 @@ function pickWithUrl(url) {
   return source;
 }
 
-// var source = pickSourceType(opts)
-
 export default function mixind(Composed) {
   return class extends Composed {
     constructor(opts) {
       super(opts);
 
-      // Composed.prototype.constructor.call(this, opts);
-
       this.sourceUrl = opts.source;
       this.source = sourceType(this, opts);
     }
-  }
+  };
 }

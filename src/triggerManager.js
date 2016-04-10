@@ -1,14 +1,14 @@
 import EventEmitter from 'events';
-import { createHttpTrigger, createSQSTrigger } from './triggers';
+import {createHttpTrigger, createSQSTrigger} from './triggers';
 
 class TriggerManager extends EventEmitter {
   triggers = {
     http: createHttpTrigger(),
-    sqs: createSQSTrigger(),
+    sqs: createSQSTrigger()
   };
 
   constructor () {
-    super()
+    super();
 
     // this.bindAllEvents({
     //   command: function(command) {
@@ -37,4 +37,4 @@ function triggerManager() {
 
 export {
   triggerManager
-}
+};

@@ -1,12 +1,10 @@
 import assert from 'assert';
 import log from '../logger';
-import { TaskBase } from './base';
+import {TaskBase} from './base';
 
-import { s } from '../misc';
-import { mixin } from '../mixins';
+import {s} from '../misc';
+import {mixin} from '../mixins';
 import execute from './execute';
-
-
 
 /**
  * Task 任务基础元数据
@@ -28,10 +26,10 @@ import execute from './execute';
  *    b. inline: 内置脚本执行不需要 deployFile 的存在
  *
  * 4. 执行期的参数
- *   createAt:　任务生成的时间，通常是收到任务触发信号的时间
- *   updateAt:　任务发生变更状态的时间，最后一次状态变更的时间
+ *   createAt: 任务生成的时间，通常是收到任务触发信号的时间
+ *   updateAt: 任务发生变更状态的时间，最后一次状态变更的时间
  *   startAt: 任务真实开始执行的时间
- *   endAt:　任务失败或完成的时间
+ *   endAt: 任务失败或完成的时间
  *
  *   stepTimeout: 每个任务步骤最长无响应时间，单位为秒， 默认 120s
  *
@@ -44,11 +42,11 @@ import execute from './execute';
 export class Task extends TaskBase {
 
   status = {
-    "ready": [ 'running', 'done' ],
-    "stop": [ 'running', 'done' ],
-    "running": [ 'stop', 'done', 'error', 'timeout' ],
-    "error": [ 'running', 'done', 'timeout' ],
-    "timeout": [ 'running', 'done' ]
+    'ready': ['running', 'done'],
+    'stop': ['running', 'done'],
+    'running': ['stop', 'done', 'error', 'timeout'],
+    'error': ['running', 'done', 'timeout'],
+    'timeout': ['running', 'done']
   };
 
   /**
@@ -60,8 +58,8 @@ export class Task extends TaskBase {
 
     Promise.resolve(this.source.read())
     .then(targetDir => {
-      return this.execute()                  // 执行部署脚本
-    }).then(result => {
+      return this.execute(targetDir);                  // 执行部署脚本
+    }).then(() => {
       this.transitionTo('done');
     }).catch(Promise.TimeoutError, () => {
       this.transitionTo('timeout');
@@ -102,6 +100,7 @@ export class Task extends TaskBase {
   }
 }
 
+/*eslint no-unused-vars: ["error", {"args": "none"}]*/
 export function createTask(opts, from ) {
   return new Task(opts);
 }

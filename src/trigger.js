@@ -2,6 +2,7 @@ import EventEmitter from 'events';
 
 class Trigger extends EventEmitter {
 
+  /*eslint no-unused-vars: ["error", {"args": "none"}]*/
   onCreated (task) {
 
   }

@@ -1,8 +1,9 @@
 import config from './config';
-import { taskPool } from './queue';
+import {taskPool} from './queue';
 import log from './logger';
-import { triggerManager } from './triggerManager';
+import {triggerManager} from './triggerManager';
 
+/*eslint no-unused-vars: ["error",{ "varsIgnorePattern": "manager" }]*/
 const manager = triggerManager();
 
 export function killTask(taskId) {
@@ -58,26 +59,26 @@ function _main() {
 
   safe(() => each((task) => {
     switch (task.getState()) {
-      case 'ready':
-        startTask(task)
-        break;
-      case 'running':
-        console.log('running count', runningTasks().length, 'pending count', taskPool.tasks.length);
-        break;
-      case 'done':
-        done(task);
-        break;
-      case 'error':
-        console.log('error');
-        break;
-      case 'timeout':
-        console.log('timeout');
-        killTask(task);
-        break;
-      default:
-        console.log(task.getMeta('createdAt'));
-        console.log('unknown');
-        killTask(task);
+    case 'ready':
+      startTask(task);
+      break;
+    case 'running':
+      console.log('running count', runningTasks().length, 'pending count', taskPool.tasks.length);
+      break;
+    case 'done':
+      done(task);
+      break;
+    case 'error':
+      console.log('error');
+      break;
+    case 'timeout':
+      console.log('timeout');
+      killTask(task);
+      break;
+    default:
+      console.log(task.getMeta('createdAt'));
+      console.log('unknown');
+      killTask(task);
     }
   }));
 }
@@ -92,11 +93,11 @@ function safe(cb) {
   }
 }
 
-function concurrency(cb)  {
-  var start = 0;
+// function concurrency(cb)  {
+//   var start = 0;
 
-  each(cb);
-}
+//   each(cb);
+// }
 
 function each(cb) {
   var runnings = 0;

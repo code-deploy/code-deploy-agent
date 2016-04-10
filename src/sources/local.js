@@ -1,19 +1,15 @@
 import fs from 'fs';
-import path from 'path';
-import uuid from 'node-uuid';
 import _mkdirp from 'mkdirp';
 import Promise from 'bluebird';
 import assert from 'assert';
 
-import {s, minute } from '../misc';
-import * as fileType from './fileType';
 import Source from './source';
 
 import * as preprocesses from '../preprocesses';
 import log from '../logger';
 import config from '../config';
-import { runnify } from '../runner';
-import { mixin } from '../mixins';
+// import {runnify} from '../runner';
+import {mixin} from '../mixins';
 
 var mkdirp = Promise.promisify(_mkdirp);
 
@@ -24,11 +20,12 @@ export class LocalSource extends Source {
   read () {
     return Promise.all([
       this.mkdirp(),
-      this.preprocessing().timeout(config.preprocesses.maxTime),
+      this.preprocessing().timeout(config.preprocesses.maxTime)
     ]).then(() => {
       // this.taskTransitionTo('done');
     }).catch(Promise.TimeoutError, (err) => {
       this.taskTransitionTo('timeout');
+      log.error(err, err.stack);
     }).catch(err => {
       this.taskClearTimeout();
       this.taskTransitionTo('error', err);
@@ -55,17 +52,18 @@ export class LocalSource extends Source {
   }
 
   dump() {
-    var { id, targetDir, source, fileType } = this;
+    var {id, targetDir, source, fileType} = this;
 
     return {
       id,
       targetDir,
       source,
       fileType,
-      taskId: this.task.id,
-    }
+      taskId: this.task.id
+    };
   }
 
+  /*eslint no-unused-vars: ["error", {"args": "none"}]*/
   load(object) {
 
   }
@@ -74,17 +72,17 @@ export class LocalSource extends Source {
 export const type = 'local';
 
 export function create(source, opts) {
-  return new LocalSource(source, opts)
+  return new LocalSource(source, opts);
 }
 
 export function validFormat (file) {
   try {
-    fs.accessSync(file, fs.F_OK)
+    fs.accessSync(file, fs.F_OK);
   } catch(err) {
     if (err.code === 'ENOENT') {
-      return false
+      return false;
     } else {
-      throw err
+      throw err;
     }
   }
 
