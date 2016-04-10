@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node_modules/.bin/babel src -d lib",
-    "jshint": "node_modules/.bin/jshint src",
+    "jshint": "node_modules/.bin/jshint --reporter=node_modules/jshint-stylish src",
     "dev": "node_modules/.bin/nodemon -i node_modules -x 'npm run jshint && node_modules/.bin/babel-node src/agent.js'"
   },
   "bin": {
@@ -24,6 +24,7 @@
     "eslint": "^2.5.3",
     "js-yaml": "^3.5.5",
     "jshint": "^2.9.1",
+    "jshint-stylish": "^2.1.0",
     "mkdirp": "^0.5.1"
   },
   "dependencies": {
