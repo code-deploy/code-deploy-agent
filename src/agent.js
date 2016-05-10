@@ -19,6 +19,27 @@ function isRunning(pid) {
 }
 
 
+function openPidfile() {
+  const pidfile = path.join(config.workDir, config.pidfile);
+
+
+  try{
+    fs.accessSync(path.dirname(pidfile), fs.F_OK);
+
+  } catch(err) {
+    if (err.code === 'ENOENT') {
+      mkdirp.sync(path.dirname(pidfile));
+      fs.writeFileSync(pidfile, process.pid.toString());
+    } else {
+      log.error(err.stack);
+      process.exit(-1);
+    }
+  }
+
+  var pid = parseInt(fs.readFileSync(pidfile));
+  return pid;
+}
+
 class Agent {
 
   static run() {
@@ -30,45 +51,24 @@ class Agent {
   }
 
   static stop() {
-    const pidfile = path.join(config.workDir, config.pidfile);
-
-
-    try{
-      fs.accessSync(path.dirname(pidfile), fs.F_OK);
-
-    } catch(err) {
-      if (err.code === 'ENOENT') {
-        mkdirp.sync(path.dirname(pidfile));
-        fs.writeFileSync(pidfile, process.pid.toString());
-      } else {
-        log.error(err.stack);
-        process.exit(-1);
-      }
-    }
-
-    var pid = parseInt(fs.readFileSync(pidfile));
+    var pid = openPidfile();
 
     return process.kill(pid);
   }
 
+  static status() {
+    var pid = openPidfile();
+
+    if (isRunning(pid)) {
+      return 0;
+    } else {
+      return 1;
+    }
+  }
+
   // check /tmp/deploy-agent.pid
   checkLoaded() {
-    const pidfile = path.join(config.workDir, config.pidfile);
-
-    try{
-      fs.accessSync(path.dirname(pidfile), fs.F_OK);
-
-    } catch(err) {
-      if (err.code === 'ENOENT') {
-        mkdirp.sync(path.dirname(pidfile));
-        fs.writeFileSync(pidfile, process.pid.toString());
-      } else {
-        log.error(err.stack);
-        process.exit(-1);
-      }
-    }
-
-    var pid = parseInt(fs.readFileSync(pidfile));
+    var pid = openPidfile();
 
     if (isRunning(pid)) {
       log.error('Always running the deploy-agent instance. checking ', pidfile);
@@ -100,5 +100,9 @@ if (argv._[0] === 'start') {
 
 if (argv._[0] === 'stop') {
   Agent.stop();
+}
+
+if (argv._[0] === 'status') {
+  process.exit(Agent.status());
 }
 
