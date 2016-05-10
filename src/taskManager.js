@@ -5,7 +5,6 @@ import {triggerManager} from './triggerManager';
 import {dot} from './misc';
 
 /*eslint no-unused-vars: ["error",{ "varsIgnorePattern": "manager" }]*/
-const manager = triggerManager();
 
 export function killTask(taskId) {
   for (var i = 0; i < taskPool.tasks.length; i++) {
@@ -49,6 +48,7 @@ export function stopTask(taskId) {
 var timerManager;
 
 export function run() {
+  const manager = triggerManager();
 
   if (timerManager) { clearInterval(timerManager); }
 

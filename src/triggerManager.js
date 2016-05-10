@@ -3,14 +3,16 @@ import config from './config';
 import {createHttpTrigger, createSQSTrigger, createS3EventTrigger} from './triggers';
 
 class TriggerManager extends EventEmitter {
-  static triggers = {
-    http: createHttpTrigger()
-  };
+
 
   constructor () {
     super();
     this.listeners = [];
-    this.listeners.push(TriggerManager.triggers.http);
+    this.defaultTriggers = {
+      http: createHttpTrigger()
+    };
+
+    this.listeners.push(this.defaultTriggers.http);
 
     for (let key in config.listeners) {
       let listen = config.listeners[key];

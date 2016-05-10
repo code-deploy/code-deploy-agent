@@ -3,6 +3,7 @@ import fs from 'fs';
 import mkdirp from 'mkdirp';
 
 import log from './logger';
+import argv from './argv';
 import * as taskManager from './taskManager';
 import config from './config';
 
@@ -23,6 +24,28 @@ class Agent {
   static run() {
     agentInstance = new Agent();
     agentInstance.mainLoop();
+  }
+
+  static stop() {
+    const pidfile = path.join(config.workDir, config.pidfile);
+
+
+    try{
+      fs.accessSync(path.dirname(pidfile), fs.F_OK);
+
+    } catch(err) {
+      if (err.code === 'ENOENT') {
+        mkdirp.sync(path.dirname(pidfile));
+        fs.writeFileSync(pidfile, process.pid.toString());
+      } else {
+        log.error(err.stack);
+        process.exit(-1);
+      }
+    }
+
+    var pid = parseInt(fs.readFileSync(pidfile));
+
+    return process.kill(pid);
   }
 
   // check /tmp/deploy-agent.pid
@@ -68,5 +91,11 @@ class Agent {
   }
 }
 
-Agent.run();
+if (argv._[0] === 'start') {
+  Agent.run();
+}
+
+if (argv._[0] === 'stop') {
+  Agent.stop();
+}
 
