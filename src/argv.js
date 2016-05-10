@@ -1,4 +1,6 @@
 import parseArgs from 'minimist';
+require('./misc/toCamelCase');
+
 var _argv = parseArgs(process.argv.slice(2));
 var argv = {};
 

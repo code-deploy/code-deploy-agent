@@ -1,15 +1,29 @@
 import EventEmitter from 'events';
-import {createHttpTrigger, createSQSTrigger} from './triggers';
+import config from './config';
+import {createHttpTrigger, createSQSTrigger, createS3EventTrigger} from './triggers';
 
 class TriggerManager extends EventEmitter {
-  triggers = {
-    http: createHttpTrigger(),
-    sqs: createSQSTrigger()
+  static triggers = {
+    http: createHttpTrigger()
   };
 
   constructor () {
     super();
+    this.listeners = [];
+    this.listeners.push(TriggerManager.triggers.http);
 
+    for (let key in config.listeners) {
+      let listen = config.listeners[key];
+      if (listen.adapter) {
+        if (listen.adapter == 'sqs') {
+          // const {accessKeyId, secretAccessKey, region, queueName} = listen;
+          this.listeners.push(createSQSTrigger(listen));
+        } else if (listen.adapter == 's3event') {
+          // const {accessKeyId, secretAccessKey, region, queueName} = listen;
+          this.listeners.push(createS3EventTrigger(listen));
+        }
+      }
+    }
     // this.bindAllEvents({
     //   command: function(command) {
 
@@ -21,13 +35,12 @@ class TriggerManager extends EventEmitter {
   }
 
   bindAllEvents (events) {
-    for (var key in this.triggers) {
-      var trigger = this.triggers[key];
+    this.listeners.forEach(function(listen) {
       for (var name in events) {
         var handle = events[name];
-        trigger.on(name, handle);
+        listen.on(name, handle);
       }
-    }
+    });
   }
 }
 

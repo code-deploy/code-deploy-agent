@@ -53,30 +53,48 @@ npm run dev --verbose-sqs-url
 在 home 目录下，设置 .deploy-agent 的内容为
 ```yaml
 ---
-sqs:
-  accessKeyId: [accessKeyId]
-  secretAccessKey: [secretAccessKey]
-  region: cn-north-1
-  endpoint: https://sqs.cn-north-1.amazonaws.com.cn/12341234asd/deploy
+...
+listeners:
+  - name: test
+    accessKeyId: [accessKeyId]
+    secretAccessKey: [secretAccessKey]
+    region: cn-north-1
+    endpoint: https://sqs.cn-north-1.amazonaws.com.cn/12341234asd/deploy
 ```
 
 启动 dev 
 拷贝 Queue Url
 
 ```bash
-node_modules/.bin/babel-node [url] '{"name":"test", "source": "examples/deploy.zip"}'
+npm run sqs-client -- [url] '{"name":"test", "source": "examples/deploy.zip"}'
 ```
 
+### S3 上传配置
+.deploy-agent
+```yaml
+---
+...
+listeners:
+  - name: test
+    accessKeyId: [accessKeyId]
+    secretAccessKey: [secretAccessKey]
+    region: cn-north-1
+    endpoint: https://sqs.cn-north-1.amazonaws.com.cn/12341234asd/deploy
+```
+
+```
+aws s3 cp examples/deploy.zip s3://wxapps --profile awscn
+```
 # RoadMap
 
 - [ ] Config
-	- [x] 基础的 etc, home , default 配置功能完成
+  - [x] 基础的 etc, home , default 配置功能完成
 - [ ] Logger
 - [x] 支持多种触发器
-	- [x] http
-	- [ ] sqs
-	- [ ] aliyun
+  - [x] http
+  - [ ] sqs
+  - [ ] aliyun
 - [ ] Runner
-	- [ ] Task State Machine
-	- [ ] parse deploy.yml
-	- [ ] plugins
+  - [ ] Task State Machine
+  - [ ] parse deploy.yml
+  - [ ] plugins

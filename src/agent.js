@@ -8,11 +8,12 @@ import config from './config';
 
 var agentInstance;
 
-function isProcessRunning(pid) {
+function isRunning(pid) {
   try {
-    return process.kill(pid + 0, 0) !== 0;
-  } catch (err) {
-    return false;
+    return process.kill(pid,0);
+  }
+  catch (e) {
+    return e.code === 'EPERM';
   }
 }
 
@@ -43,7 +44,7 @@ class Agent {
 
     var pid = parseInt(fs.readFileSync(pidfile));
 
-    if (isProcessRunning(pid)) {
+    if (isRunning(pid)) {
       log.error('Always running the deploy-agent instance. checking ', pidfile);
       process.exit(-1);
     } else {

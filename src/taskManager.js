@@ -2,6 +2,7 @@ import config from './config';
 import {taskPool} from './queue';
 import log from './logger';
 import {triggerManager} from './triggerManager';
+import {dot} from './misc';
 
 /*eslint no-unused-vars: ["error",{ "varsIgnorePattern": "manager" }]*/
 const manager = triggerManager();
@@ -85,7 +86,7 @@ function _main() {
 
 function safe(cb) {
   try {
-    if (taskPool.tasks.length === 0) { process.stdout.write('.'); }
+    if (taskPool.tasks.length === 0) { dot(); /* process.stdout.write('.');*/ }
 
     cb();
   } catch (err) {
@@ -120,7 +121,8 @@ function each(cb) {
 
       cb(task);
     } else {
-      process.stdout.write('.');
+      dot();
+      // process.stdout.write('.');
     }
   }
 }

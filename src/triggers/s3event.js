@@ -17,19 +17,21 @@ import * as queue from '../queue';
 
 const apiVersion = '2012-11-05';
 
-export class SqsTrigger extends Trigger {
+export class S3EventTrigger extends Trigger {
 
   /*eslint no-unused-vars: ["error", {"args": "none"}]*/
   constructor (options = {}) {
     super(null);
 
-    const {accessKeyId, secretAccessKey, region, queueName} = options;
+    this.options = options;
+    const {accessKeyId, secretAccessKey, region, queueName} = this.options;
+    this.name = options.name;
     this.accessKeyId = accessKeyId;
     this.secretAccessKey = secretAccessKey;
     this.region = region;
     this.QueueName = queueName;
 
-    this.sqs = Promise.promisifyAll(new AWS.SQS({
+    this._sqs = Promise.promisifyAll(new AWS.SQS({
       // endpoint,
       accessKeyId,
       secretAccessKey,
@@ -42,13 +44,13 @@ export class SqsTrigger extends Trigger {
 
   start () {
     const {QueueName} = this;
-    var nameParams = {
+    const nameParams = {
       QueueName
     };
 
     log.info('Starting subscribe SQS messages');
 
-    this.sqs.createQueue(nameParams, (err, data) => {
+    this.sqs().createQueue(nameParams, (err, data) => {
       if (err) {
         console.log(err, err.stack); // an error occurred
       } else {
@@ -79,11 +81,13 @@ export class SqsTrigger extends Trigger {
     };
 
     params['QueueUrl'] = this.QueueUrl;
-    log.info(`ReceiveMessage '${this.QueueName}' at ${this.QueueUrl} by sqs`);
+    log.info(`ReceiveMessage '${this.QueueName}' at ${this.QueueUrl} by s3event`);
 
-    this.sqs.receiveMessage(params, (err, data) => {
+    this.sqs().receiveMessage(params, (err, data) => {
       if (err) {
+        this.clear();
         console.log(err, err.stack);
+        setTimeout(this.receiveMessage.bind(this), 1000);
       } else {
         var {Messages} = data;
         if (util.isArray(Messages)) {
@@ -101,7 +105,7 @@ export class SqsTrigger extends Trigger {
     Promise.all(messages.map( message => {
       var {ReceiptHandle} = message;
 
-      return this.sqs.deleteMessageAsync({
+      return this.sqs().deleteMessageAsync({
         QueueUrl: this.QueueUrl,
         ReceiptHandle
       });
@@ -109,6 +113,7 @@ export class SqsTrigger extends Trigger {
 
       setImmediate(this.receiveMessage.bind(this));
     }).catch( err => {
+      this.clear();
       log.error(err, err.stack);
     });
   }
@@ -117,25 +122,71 @@ export class SqsTrigger extends Trigger {
     var {MessageId, Body/*, ReceiptHandle, Body*/} = message;
     log.info(`Processing message ${MessageId}`);
     try {
-      var data = JSON.parse(Body);
+      let data = JSON.parse(Body);
+      let {Records} = data;
 
-      var {trigger} = data;
-      if (trigger) {
-        queue.createTask(trigger);
-      } else {
-        throw new Error(`Invalid format ${util.inspect(data)}`);
-      }
+      Records.forEach(function(record) {
+        let trigger = parseS3(record.s3);
+        if (trigger) {
+          queue.createTask(trigger);
+        } else {
+          throw new Error(`Invalid format ${util.inspect(data)}`);
+        }
+      });
     } catch (err) {
       log.error(err, err.stack);
     }
   }
+
+  sqs () {
+    const {accessKeyId, secretAccessKey, region} = this.options;
+
+    if (!this._sqs) {
+      this._sqs = Promise.promisifyAll(new AWS.SQS({
+        // endpoint,
+        accessKeyId,
+        secretAccessKey,
+        region,
+        apiVersion
+      }));
+    }
+
+    return this._sqs;
+  }
+
+  clear() {
+    this._sqs = null;
+  }
+}
+
+
+// sample json schema
+// { s3SchemaVersion: '1.0',
+//   configurationId: 'AppDeployForPut',
+//   bucket:
+//    { name: 'wxapps',
+//      ownerIdentity: { principalId: 'AWS:560397965647' },
+//      arn: 'arn:aws:s3:::wxapps' },
+//   object:
+//    { key: 'deploy-piano-server-1462778270.tar.gz',
+//      size: 27019491,
+//      eTag: 'cdbefd32d6475e3695de7364d5de801f-4',
+//      sequencer: '00573039A07A0D6184' } }
+function parseS3(s3) {
+  return {
+    name: s3.configurationId,
+    event: s3.configurationId,
+    source: `s3://${s3.bucket.name}/${s3.object.key}`,
+    size: s3.object.size,
+    eTag: s3.object.eTag
+  };
 }
 
 
 var trigger;
 
-export default function createSQSTrigger(options) {
-  trigger = new SqsTrigger(options);
+export default function createS3EventTrigger(options) {
+  trigger = new S3EventTrigger(options);
 
   trigger.start();
   return trigger;

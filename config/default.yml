@@ -11,3 +11,5 @@ tasks:
   concurrency: 2
 preprocesses:
   maxTime: 420000
+downloads:
+  maxTime: 420000
