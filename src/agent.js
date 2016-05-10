@@ -95,14 +95,19 @@ class Agent {
 }
 
 if (argv._[0] === 'start') {
+  console.log(`deploy-agent is starting`);
+
   Agent.run();
 }
 
 if (argv._[0] === 'stop') {
+  console.log(`deploy-agent is stopping`);
   Agent.stop();
 }
 
 if (argv._[0] === 'status') {
-  process.exit(Agent.status());
+  const status = Agent.status();
+  console.log(`deploy-agent is ${status == 0 ? 'running' : 'stopped'}`);
+  process.exit(status);
 }
 
