@@ -1,6 +1,6 @@
 {
   "name": "deploy-agent",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Deploy-agent is agent of Automated deployments tools",
   "main": "index.js",
   "scripts": {
@@ -31,19 +31,20 @@
     "mkdirp": "^0.5.1"
   },
   "dependencies": {
-    "bluebird": "^3.3.4",
-    "js-yaml": "^3.5.5",
     "adm-zip": "^0.4.7",
     "aws-sdk": "^2.3.1",
     "aws-sqs": "0.0.6",
+    "bluebird": "^3.3.4",
     "body-parser": "^1.15.0",
     "buckle": "0.0.3",
     "debug-logger": "^0.4.1",
     "express": "^4.13.4",
     "fs-extra": "^0.26.7",
     "js-logger": "^1.2.0",
+    "js-yaml": "^3.5.5",
     "loglevel-std-streams": "^1.0.0",
     "minimist": "^1.2.0",
+    "mkdirp": "^0.5.1",
     "node-uuid": "^1.4.7",
     "tmp": "0.0.28",
     "unzip": "^0.1.11"

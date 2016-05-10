@@ -85,6 +85,21 @@ listeners:
 ```
 aws s3 cp examples/deploy.zip s3://wxapps --profile awscn
 ```
+
+### 安装服务
+
+```
+npm install deploy-agent -g
+# /usr/local/bin/deploy-agent -> /usr/local/lib/node_modules/deploy-agent/bin/cli.js
+
+sudo cp /usr/local/lib/node_modules/deploy-agent/init.d/deploy-agent /etc/init.d/
+sudo chkconfig add deploy-agent 
+sudo chkconfig deploy-agent on 
+
+# set /etc/deploy-agent configure
+
+sudo service deploy-agent start
+```
 # RoadMap
 
 - [ ] Config
