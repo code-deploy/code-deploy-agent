@@ -8,8 +8,6 @@ const transports = argv ? [new (winston.transports.Console)(),
     new (winston.transports.File)({filename: config.logfile,  handleExceptions: true,
     humanReadableUnhandledException: true})] : [new (winston.transports.Console)()];
 
-console.log(transports);
-
 var logger = new winston.Logger({
   level: 'info',
   transports
