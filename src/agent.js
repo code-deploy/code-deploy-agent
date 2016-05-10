@@ -24,6 +24,9 @@ class Agent {
   static run() {
     agentInstance = new Agent();
     agentInstance.mainLoop();
+    if (argv.d || argv.daemon) {
+      require('daemon')();
+    }
   }
 
   static stop() {
