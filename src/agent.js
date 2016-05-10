@@ -7,6 +7,7 @@ import argv from './argv';
 import * as taskManager from './taskManager';
 import config from './config';
 
+const pidfile = path.join(config.workDir, config.pidfile);
 var agentInstance;
 
 function isRunning(pid) {
@@ -20,8 +21,6 @@ function isRunning(pid) {
 
 
 function openPidfile() {
-  const pidfile = path.join(config.workDir, config.pidfile);
-
 
   try{
     fs.accessSync(path.dirname(pidfile), fs.F_OK);
@@ -53,7 +52,7 @@ class Agent {
   static stop() {
     var pid = openPidfile();
 
-    return process.kill(pid);
+    return process.kill(pid, 'SIGTERM');
   }
 
   static status() {
@@ -95,13 +94,13 @@ class Agent {
 }
 
 if (argv._[0] === 'start') {
-  console.log(`deploy-agent is starting`);
+  console.log('deploy-agent is starting');
 
   Agent.run();
 }
 
 if (argv._[0] === 'stop') {
-  console.log(`deploy-agent is stopping`);
+  console.log('deploy-agent is stopping');
   Agent.stop();
 }
 

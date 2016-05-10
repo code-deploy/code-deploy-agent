@@ -1,6 +1,7 @@
 ---
 pidfile: 'deploy-agent.pid'
 workDir: '/tmp/deploy-agent'
+logfile: '/var/log/deploy-agent.log'
 trigger:
   http:
     port: 8040

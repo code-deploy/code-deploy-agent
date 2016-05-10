@@ -1,6 +1,6 @@
 {
   "name": "deploy-agent",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Deploy-agent is agent of Automated deployments tools",
   "main": "lib/agent.js",
   "scripts": {
@@ -43,13 +43,13 @@
     "debug-logger": "^0.4.1",
     "express": "^4.13.4",
     "fs-extra": "^0.26.7",
-    "js-logger": "^1.2.0",
     "js-yaml": "^3.5.5",
     "loglevel-std-streams": "^1.0.0",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "node-uuid": "^1.4.7",
     "tmp": "0.0.28",
-    "unzip": "^0.1.11"
+    "unzip": "^0.1.11",
+    "winston": "^2.2.0"
   }
 }
