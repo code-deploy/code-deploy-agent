@@ -5,7 +5,7 @@ logfile: '/var/log/deploy-agent.log'
 trigger:
   http:
     port: 8040
-stepTimeout: 20
+stepTimeout: 60
 logLevel: WARN # TRACE, DEBUG, WARN, ERROR 
 tasks:
   checkInterval: 300

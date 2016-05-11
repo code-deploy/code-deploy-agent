@@ -2,8 +2,10 @@ import AdmZip from 'adm-zip';
 import buckle from 'buckle';
 import Utils from 'adm-zip/util';
 import {promisify} from 'bluebird';
+import log from '../logger';
 
 function buckleExtract(zip, to, opts = {}, cb) {
+  log.info('zip extract...');
   buckle.open(zip, to, cb);
 }
 

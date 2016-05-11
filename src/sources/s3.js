@@ -54,11 +54,11 @@ export class S3Source extends Source {
   }
 
   read () {
-    this.mkdirp()
+    return this.mkdirp()
     .then(() => {
-      return this.fetchS3().timeout(config.downloads.maxTime);
+      return this.fetchS3(); //.timeout(config.downloads.maxTime);
     }).then(() => {
-      return this.preprocessing().timeout(config.preprocesses.maxTime);
+      return this.preprocessing(); //.timeout(config.preprocesses.maxTime);
     }).then(() => {
       // this.taskTransitionTo('done');
     }).catch(Promise.TimeoutError, (err) => {
@@ -103,7 +103,9 @@ export class S3Source extends Source {
 
     assert(preprocess, 'Invalid preprocess type in this file ' + this.tempfile);
     log.info(`Preprocess intermedia ${this.tempfile} to ${this.targetDir}`);
-    return preprocess.extract(this.tempfile, this.targetDir, {overwrite: true});
+
+    return preprocess
+      .extract(this.tempfile, this.targetDir, {overwrite: true});
   }
 }
 
