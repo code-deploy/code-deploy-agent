@@ -33,7 +33,21 @@ try {
 
   copy(argv.dir, deploy.target, runOtps);
 
-  if (deploy.script) { spawn(deploy.script, [], runOtps); }
+  if (deploy.script) {
+    let runner = spawn(deploy.script, [], runOtps);
+
+    runner.stdout.on('data', (data) => {
+      log.info(`stdout: ${data}`);
+    });
+
+    runner.stderr.on('data', (data) => {
+      log.error(`stderr: ${data}`);
+    });
+
+    runner.on('close', (code) => {
+      log.info(`child process exited with code ${code}`);
+    });
+  }
 } catch (err) {
   log.error(err);
 }
