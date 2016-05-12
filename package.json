@@ -43,6 +43,7 @@
     "debug-logger": "^0.4.1",
     "express": "^4.13.4",
     "fs-extra": "^0.26.7",
+    "fs-walk": "0.0.1",
     "js-yaml": "^3.5.5",
     "loglevel-std-streams": "^1.0.0",
     "minimist": "^1.2.0",
