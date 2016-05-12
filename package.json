@@ -1,6 +1,6 @@
 {
   "name": "deploy-agent",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Deploy-agent is agent of Automated deployments tools",
   "main": "lib/agent.js",
   "scripts": {
@@ -52,6 +52,7 @@
     "tarball-extract": "0.0.3",
     "tmp": "0.0.28",
     "unzip": "^0.1.11",
+    "userid": "^0.2.0",
     "winston": "^2.2.0"
   }
 }
