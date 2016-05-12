@@ -16,4 +16,5 @@ export function copy(src, dest, options = {}) {
       fs.chownSync(path.join(basedir, filename), uid, gid || uid);
     });
   }
+  fs.chownSync(dest, uid, gid || uid);
 }

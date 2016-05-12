@@ -4,10 +4,11 @@ import minimist from 'minimist';
 import path from 'path';
 import userid from 'userid';
 import yaml from 'js-yaml';
-import {spawn} from 'child_process';
+// import {spawn} from 'child_process';
 
 import log from '../logger';
 import {copy} from './copy';
+import {suspawn} from './suspawn';
 
 const argv = minimist(process.argv.slice(2));
 const deployFile = path.join(argv.dir, argv.file);
@@ -18,7 +19,7 @@ try {
   assert(deploy.target, 'Deploy file must have spectify target');
 
   const user = deploy.owner;
-  const group = deploy.group || user;
+  const group = typeof deploy.group !== 'undefined' ? deploy.group : user;
   let runOtps = {
     cwd: deploy.target
   };
@@ -38,7 +39,7 @@ try {
   copy(argv.dir, deploy.target, runOtps);
 
   if (deploy.script) {
-    let runner = spawn(deploy.script, [], runOtps);
+    let runner = suspawn(deploy.script, user, runOtps);
 
     runner.stdout.on('data', (data) => {
       log.info(`stdout: ${data}`);

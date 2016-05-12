@@ -113,3 +113,5 @@ sudo service deploy-agent start
   - [ ] Task State Machine
   - [ ] parse deploy.yml
   - [ ] plugins
+  - [ ] runas 
+- [ ] 支持多台机器同时部署
