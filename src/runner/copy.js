@@ -5,7 +5,7 @@ import fs from 'fs-extra';
 export function copy(src, dest, options = {}) {
   const cpOpts = {
     clobber: true,
-    dereference: false
+    dereference: true
   };
 
   const {uid, gid} = options;
