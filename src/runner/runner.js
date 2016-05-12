@@ -23,8 +23,12 @@ try {
     cwd: deploy.target
   };
 
+  log.info('deploy config', deploy);
+  log.info(`runas user ${user} and group ${group}`);
+
   if (user) {
     runOtps.uid = userid.uid(user);
+    log.info(`runas command as ${user} of ${runOtps.uid}`);
   }
 
   if (group) {

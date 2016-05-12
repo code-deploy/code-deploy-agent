@@ -1,3 +1,4 @@
 ---
 target: '/tmp/www'
 script: scripts/install.sh
+owner: hysios
