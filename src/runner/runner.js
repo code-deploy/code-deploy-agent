@@ -8,7 +8,7 @@ import yaml from 'js-yaml';
 
 import log from '../logger';
 import {copy} from './copy';
-import {suspawn} from './suspawn';
+import {sudoSpawn} from './suspawn';
 
 const argv = minimist(process.argv.slice(2));
 const deployFile = path.join(argv.dir, argv.file);
@@ -39,7 +39,7 @@ try {
   copy(argv.dir, deploy.target, runOtps);
 
   if (deploy.script) {
-    let runner = suspawn(deploy.script, user, runOtps);
+    let runner = sudoSpawn(deploy.script, user, [], runOtps);
 
     runner.stdout.on('data', (data) => {
       log.info(`stdout: ${data}`);

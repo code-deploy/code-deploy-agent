@@ -19,7 +19,6 @@ function isRunning(pid) {
   }
 }
 
-
 function openPidfile() {
 
   try{

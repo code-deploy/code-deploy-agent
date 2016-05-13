@@ -14,3 +14,6 @@ preprocesses:
   maxTime: 420000
 downloads:
   maxTime: 420000
+autoupgrade:
+  interval: 1200000
+  site: https://s3.cn-north-1.amazonaws.com.cn/wanliu/deploy-agent/
