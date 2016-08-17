@@ -1,6 +1,6 @@
 {
   "name": "deploy-agent",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "Deploy-agent is agent of Automated deployments tools",
   "main": "lib/agent.js",
   "scripts": {
@@ -49,7 +49,6 @@
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "node-uuid": "^1.4.7",
-    "promise-serial": "^0.1.0",
     "tar.gz": "^1.0.3",
     "tarball-extract": "0.0.3",
     "tmp": "0.0.28",
