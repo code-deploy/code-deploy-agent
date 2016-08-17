@@ -1,6 +1,6 @@
 {
   "name": "deploy-agent",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "Deploy-agent is agent of Automated deployments tools",
   "main": "lib/agent.js",
   "scripts": {
