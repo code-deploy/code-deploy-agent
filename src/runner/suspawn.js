@@ -2,7 +2,7 @@ import {spawn} from 'child_process';
 import {userEnv} from './userEnv';
 import log from '../logger';
 
-const RUNNER_ENVIROMENT_NAMES = [ 'SHELL', 'USER', 'PATH' ];
+const RUNNER_ENVIROMENT_NAMES = ['SHELL', 'USER', 'PATH'];
 
 export function suspawn(command, user, options = {}) {
   log.info(`run command ${command} in ${options['cwd']}`);
@@ -11,11 +11,13 @@ export function suspawn(command, user, options = {}) {
 
 export function sudoSpawn(command, user, args = [], options = {}) {
   const ENV = userEnv(user);
-  let runEnv = {};
+  const {env} = options;
+  let runEnv = {...env};
+
 
   RUNNER_ENVIROMENT_NAMES.forEach( name => {
     runEnv[name] = ENV[name];
   });
 
-  return spawn(command, args, { ...options, env: runEnv });
+  return spawn(command, args, {...options, env: runEnv});
 }

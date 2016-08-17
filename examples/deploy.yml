@@ -2,3 +2,5 @@
 target: '/tmp/www'
 script: scripts/install.sh
 owner: hysios
+before: scripts/clear.sh
+after: scripts/done.sh

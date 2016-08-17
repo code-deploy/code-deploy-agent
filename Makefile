@@ -21,7 +21,7 @@ endif
 dev:
 	@npm run dev --verbose-url
 
-test_deploy:
+zip_deploy:
 	@cp -r examples/* $(TEMPDIR)
 	@echo 'copy examples to $(TEMPDIR)'
 	@sed -i -e "s/^owner\:[ \-_a-zA-Z0-9]*$\/owner: $(USER)/" $(TEMPDIR)/deploy.yml
@@ -30,6 +30,9 @@ test_deploy:
 	@cat $(TEMPDIR)/deploy.yml
 	@echo
 	@cd $(TEMPDIR);tar --exclude deploy.tar.gz --exclude deploy.tar.bz2 --exclude deploy.zip --exclude deploy.tar.xz -czvf /tmp/deploy-examples.tar.gz .
+
+test_deploy: zip_deploy
+
 	@aws s3 cp /tmp/deploy-examples.tar.gz $(S3_STORAGE) $(PROFILE)
 
 build: 

@@ -4,6 +4,8 @@ import minimist from 'minimist';
 import path from 'path';
 import userid from 'userid';
 import yaml from 'js-yaml';
+import Promise from 'bluebird';
+
 // import {spawn} from 'child_process';
 
 import log from '../logger';
@@ -36,10 +38,63 @@ try {
     runOtps.gid = userid.gid(group);
   }
 
-  copy(argv.dir, deploy.target, runOtps);
+  runOtps.env = {
+    SRC_DIR: argv.dir,
+    TARGET_DIR: deploy.target
+  };
 
-  if (deploy.script) {
-    let runner = sudoSpawn(deploy.script, user, [], runOtps);
+  var before = new Promise(function(resolve) {
+    if (deploy.before) {
+      runScript(deploy.before, user, [], runOtps, resolve);
+    } else {
+      resolve('skip before');
+    }
+  });
+
+  var action = new Promise(function(resolve, reject) {
+    copy(argv.dir, deploy.target, runOtps);
+
+    if (deploy.script) {
+      let runner = sudoSpawn(deploy.script, user, [], runOtps);
+
+      runner.stdout.on('data', (data) => {
+        log.info(`stdout: ${data}`);
+      });
+
+      runner.stderr.on('data', (data) => {
+        log.error(`stderr: ${data}`);
+      });
+
+      runner.on('close', (code) => {
+        log.info(`child process exited with code ${code}`);
+        resolve();
+      });
+    } else {
+      reject('not deploy script');
+    }
+  });
+
+  var after = new Promise(function(resolve) {
+    if (deploy.after) {
+      runScript(deploy.after, user, [], runOtps, resolve);
+    } else {
+      resolve('skip after');
+    }
+  });
+
+  Promise.all([before, action, after]).then(function(result) {
+    log.info('run all action results', result);
+  }).catch(function(err) {
+    log.error('error', err);
+  });
+} catch (err) {
+  log.error(err);
+}
+
+
+function runScript(script, user, args, runOtps, done) {
+  if (script) {
+    let runner = sudoSpawn(script, user, args, runOtps);
 
     runner.stdout.on('data', (data) => {
       log.info(`stdout: ${data}`);
@@ -51,8 +106,15 @@ try {
 
     runner.on('close', (code) => {
       log.info(`child process exited with code ${code}`);
+      done();
     });
+
+    runner.on('exit', (code) => {
+      log.info(`child process exited with code ${code}`);
+      done();
+    });    
+  } else {
+    done('not script');
   }
-} catch (err) {
-  log.error(err);
 }
+

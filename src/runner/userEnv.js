@@ -3,7 +3,7 @@ import {spawnSync} from 'child_process';
 export function userEnv(user) {
   const {output} =  spawnSync('sudo', ['-iHu', user, 'env']);
   const lines = output.toString().split('\n');
-  let results = {}
+  let results = {};
   lines.forEach(line => {
     const pos = line.indexOf('=');
     if (pos > 0) {
