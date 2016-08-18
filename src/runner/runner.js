@@ -43,47 +43,53 @@ try {
     TARGET_DIR: deploy.target
   };
 
-  var before = new Promise(function(resolve) {
+  new Promise(function(resolve) {
+    log.info('before');
+
     if (deploy.before) {
       runScript(deploy.before, user, [], runOtps, resolve);
     } else {
       resolve('skip before');
     }
-  });
+  }).then(function() {
+    return new Promise(function(resolve, reject) {
+      copy(argv.dir, deploy.target, runOtps);
 
-  var action = new Promise(function(resolve, reject) {
-    copy(argv.dir, deploy.target, runOtps);
+      if (deploy.script) {
+        let runner = sudoSpawn(deploy.script, user, [], runOtps);
 
-    if (deploy.script) {
-      let runner = sudoSpawn(deploy.script, user, [], runOtps);
+        runner.stdout.on('data', (data) => {
+          log.info(`stdout: ${data}`);
+        });
 
-      runner.stdout.on('data', (data) => {
-        log.info(`stdout: ${data}`);
-      });
+        runner.stderr.on('data', (data) => {
+          log.error(`stderr: ${data}`);
+        });
 
-      runner.stderr.on('data', (data) => {
-        log.error(`stderr: ${data}`);
-      });
+        runner.on('close', (code) => {
+          log.info(`child process exited with code ${code}`);
+          resolve();
+        });
 
-      runner.on('close', (code) => {
-        log.info(`child process exited with code ${code}`);
-        resolve();
-      });
-    } else {
-      reject('not deploy script');
-    }
-  });
-
-  var after = new Promise(function(resolve) {
-    if (deploy.after) {
-      runScript(deploy.after, user, [], runOtps, resolve);
-    } else {
-      resolve('skip after');
-    }
-  });
-
-  Promise.all([before, action, after]).then(function(result) {
-    log.info('run all action results', result);
+        runner.on('exit', (code) => {
+          log.info(`child process exited with code ${code}`);
+          resolve();
+        });    
+      } else {
+        reject('not deploy script');
+      }
+    });
+  }).then(function() {
+    log.info('after');  
+    return new Promise(function(resolve) {
+      if (deploy.after) {
+        runScript(deploy.after, user, [], runOtps, resolve);
+      } else {
+        resolve('skip after');
+      }
+    });
+  }).then(function() {
+    log.info('run all action done');
   }).catch(function(err) {
     log.error('error', err);
   });
